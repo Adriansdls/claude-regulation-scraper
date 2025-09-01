@@ -1,0 +1,183 @@
+# Production Environment Configuration
+# Settings optimized for production deployment
+
+# Disable debug mode
+debug: false
+
+# Database configuration - production settings
+database:
+  database: "regulations_prod"
+  pool_size: 20
+  max_overflow: 50
+  pool_timeout: 30
+  pool_recycle: 1800  # Shorter recycle time for production
+
+# Redis configuration
+redis:
+  db: 0
+  max_connections: 200
+  health_check_interval: 60
+
+# API configuration
+api:
+  debug: false
+  reload: false
+  workers: 8  # More workers for production
+  access_log: false  # Disable access logs for performance
+  cors_origins: 
+    - "https://yourdomain.com"
+    - "https://api.yourdomain.com"
+  rate_limiting:
+    enabled: true
+    requests_per_minute: 60  # Stricter rate limiting
+  auth_enabled: true
+
+# Logging configuration - production settings
+logging:
+  level: "INFO"
+  console_level: "WARNING"
+  file_path: "logs/production.log"
+  file_max_size: "50MB"
+  file_backup_count: 10
+
+# Monitoring configuration - full monitoring in production
+monitoring:
+  enabled: true
+  health_check_interval: 30
+  metrics_enabled: true
+  alert_enabled: true
+  alert_thresholds:
+    memory_usage_mb: 2000
+    cpu_usage_percent: 70
+    error_rate_percent: 2
+    queue_size_warning: 200
+    queue_size_critical: 1000
+
+# Security configuration - strict security for production
+security:
+  encryption_enabled: true
+  api_key_required: true
+  rate_limiting_enabled: true
+  max_requests_per_minute: 60
+  ip_whitelist: []  # Define specific IPs if needed
+  ip_blacklist: []
+
+# Extraction configuration - production limits
+extraction:
+  max_document_size: 50485760  # 50MB for production
+  max_documents_per_job: 5000
+  pdf_ocr_enabled: true
+  vision_processing_enabled: true
+  text_quality_threshold: 0.7
+  confidence_threshold: 0.8
+
+# Agent configurations - production optimized
+agents:
+  discovery:
+    enabled: true
+    max_concurrent_jobs: 5
+    request_delay: 2.0  # Respectful crawling
+    timeout: 90
+    max_retries: 3
+    rate_limit:
+      enabled: true
+      max_per_minute: 20
+
+  html_extraction:
+    enabled: true
+    max_concurrent_jobs: 10
+    request_delay: 1.0
+    timeout: 60
+    max_retries: 3
+    rate_limit:
+      enabled: true
+      max_per_minute: 40
+
+  pdf_extraction:
+    enabled: true
+    max_concurrent_jobs: 8
+    request_delay: 1.5
+    timeout: 180
+    max_retries: 2
+    rate_limit:
+      enabled: true
+      max_per_minute: 25
+
+  vision_extraction:
+    enabled: true
+    max_concurrent_jobs: 4
+    request_delay: 3.0
+    timeout: 600
+    max_retries: 2
+    rate_limit:
+      enabled: true
+      max_per_minute: 15
+
+  content_analysis:
+    enabled: true
+    max_concurrent_jobs: 8
+    request_delay: 1.0
+    timeout: 120
+    max_retries: 3
+    rate_limit:
+      enabled: true
+      max_per_minute: 35
+
+  validation:
+    enabled: true
+    max_concurrent_jobs: 10
+    request_delay: 0.5
+    timeout: 45
+    max_retries: 2
+    rate_limit:
+      enabled: false
+
+# Custom settings for production
+custom:
+  # Website profiles - longer cache for production
+  website_profiles:
+    cache_duration_hours: 72
+    update_threshold_days: 30
+    
+  # Performance optimizations
+  performance:
+    enable_caching: true
+    cache_ttl_seconds: 7200
+    enable_compression: true
+    compression_level: 9
+    
+  # Quality assurance - strict standards
+  quality_assurance:
+    min_confidence_score: 0.7
+    duplicate_threshold: 0.95
+    content_similarity_threshold: 0.9
+    
+  # Legal compliance - strict compliance
+  legal_compliance:
+    respect_robots_txt: true
+    default_crawl_delay: 2.0
+    max_pages_per_domain: 10000
+    user_agent_contact: "legal@company.com"
+    
+  # Production-specific features
+  production:
+    enable_metrics_collection: true
+    enable_error_reporting: true
+    enable_performance_monitoring: true
+    backup_enabled: true
+    backup_schedule: "0 2 * * *"  # Daily at 2 AM
+    
+  # Scaling configuration
+  scaling:
+    auto_scaling_enabled: true
+    min_instances: 3
+    max_instances: 20
+    scale_up_threshold: 80
+    scale_down_threshold: 30
+    
+  # Data retention
+  data_retention:
+    logs_retention_days: 90
+    metrics_retention_days: 365
+    job_history_retention_days: 180
+    temp_files_cleanup_hours: 24

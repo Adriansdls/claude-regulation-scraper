@@ -1,0 +1,82 @@
+- [Skip to main content](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts#main-content)
+- [Skip to FDA Search](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts#search-form)
+- [Skip to in this section menu](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts#section-nav)
+- [Skip to footer links](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts#footer)
+
+[In this section:\\
+\\
+Safety](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts#section-nav)
+
+1. [Home](https://www.fda.gov/)
+2. [Safety](https://www.fda.gov/safety)
+3. Recalls, Market Withdrawals, & Safety Alerts
+
+1. [Safety](https://www.fda.gov/safety "Safety")
+
+The list below provides information gathered from press releases and other public notices about certain recalls of FDA-regulated products. Not all recalls have press releases or are posted on this page. See [Additional information about recalls](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts/additional-information-about-recalls "Additional Information about Recalls ") for a more complete listing.
+
+The Recalls, Market Withdrawals & Safety Alerts are available on FDA’s website for three years before being archived. To search archived content, visit [Search FDA Archive](https://www.fda.gov/about-fda/about-website/fdagov-archive) and input the name of the product and/or company name in the Search terms box as well as the year to get the most inclusive search results. To scroll through archived Recalls, Market Withdrawals & Safety Alerts content by year, see the [Recall and Safety Alerts Archive.](https://wayback.archive-it.org/7993/20201217182838/https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts/archive-recalls-market-withdrawals-safety-alerts) [External Link Disclaimer](http://www.fda.gov/about-fda/website-policies/website-disclaimer)
+
+![Email Icon for GovDelivery](https://www.fda.gov/media/70675/download)[Sign up to receive Recalls, Market Withdrawals and Safety Alerts](https://public.govdelivery.com/accounts/USFDA/subscriber/new) [External Link Disclaimer](http://www.fda.gov/about-fda/website-policies/website-disclaimer).
+
+_\\* FDA Employees: Use Chrome to Subscribe until further notice._
+
+Search
+
+## [Filter by](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts\#collapseOne)
+
+Product Type\- Any -Animal & VeterinaryBiologicsCosmeticsDietary SupplementsDrugsFood & BeveragesMedical DevicesRadiation-Emitting ProductsTobacco
+
+Terminated Recall\- Any -YesNo
+
+A Terminated Recall is a recall where the FDA has determined that all reasonable efforts have been made to remove or correct the violative product in accordance with the recall strategy, and proper disposition has been made according to the degree of hazard. Recalls that are not indicated as being terminated are either ongoing or completed.
+
+Hide lower priority columns
+
+Showing 1 to 10 of 1,080 entries
+
+Show 102550100 entries
+
+Export Excel
+
+| Date | Brand Name(s) | Product Description | Product Type | Recall Reason Description | Company Name | Terminated Recall | Excerpt |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 08/29/2025 | [Sand Bar/Arctic Shores/Best Yet/Great American/First Street](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts/updated-release-southwind-foods-llc-recalls-frozen-shrimp-because-possible-health-risk) | Frozen shrimp | Food & Beverages, Contaminants, Shellfish | Due to possible radionuclide (Cesium-137) contamination. | Southwind Foods, LLC. |  |  |
+| 08/29/2025 | [Green Lumber](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts/green-lumber-holding-llc-issues-consumer-alert-counterfeit-products-following-fda-findings) | Dietary Supplement | Drugs | Undeclared prescription drug-Tadalafil | Green Lumber Holding, LLC. |  |  |
+| 08/29/2025 | [Hans Kissle](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts/hans-kissle-llc-issues-allergy-alert-undeclared-wheat-allergen-hans-kissle-red-potato-bliss-salad-0) | Red Bliss Potato Salad | Food & Beverages, Allergens | Undeclared wheat | Hans Kissle |  |  |
+| 08/28/2025 | [Aqua Star](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts/aquastar-usa-corp-recalls-cocktail-shrimp-6oz-because-possible-health-risk) | Cocktail Shrimp | Food & Beverages, Contaminants, Shellfish | Potential Contaminant – cesium-137 (Cs-137) | Aquastar Corp |  |  |
+| 08/28/2025 | [DermaRite](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts/dermarite-industries-expands-voluntary-nationwide-recall-due-potential-burkholderia-cepacia) | Hand Sanitizers, Cleansers, Skin Protectants, Deodorant | Drugs | Device & Drug Safety - Potential Burkholderia cepacian contamination | DermaRite Industries |  |  |
+| 08/28/2025 | [Kroger](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts/aquastar-usa-corp-recalls-kroger-mercado-frozen-cooked-shrimp-because-possible-health-risk) | Mercado Frozen Cooked Shrimp | Food & Beverages, Contaminants, Shellfish | Potential Contaminant – cesium-137 (Cs-137) | Aquastar Corp |  |  |
+| 08/27/2025 | [Country Eggs, NIJIYA, GOLDEN YOLK](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts/country-eggs-llc-recalls-large-brown-cage-free-sunshine-yolks-because-possible-health-risk) | Large Brown Cage Free Eggs | Food & Beverages, Foodborne Illness | Potential Foodborne Illness - Salmonella | Country Eggs, LLC |  |  |
+| 08/27/2025 | [Unichem Pharmaceuticals](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts/unichem-pharmaceuticals-usa-inc-issues-voluntary-nationwide-recall-cyclobenzaprine-hydrochloride) | Cyclobenzaprine Hydrochloride Tablets USP 10 mg | Drugs | Device & Drug Safety – Mislabel | Unichem Pharmaceuticals |  |  |
+| 08/26/2025 | [Taylor Farms](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts/company-voluntarily-recalls-honey-balsamic-salad-kit-due-potential-undeclared-sesame-and-soy) | Honey Balsamic Salad Kit | Food & Beverages, Allergens | Undeclared Allergen – Sesame and Soy | Taylor Fresh Foods |  |  |
+| 08/25/2025 | [Viva](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts/viva-raw-issues-voluntary-recall-two-lots-dog-and-cat-foods-due-salmonella-and-listeria) | Ground Beef for Dogs and Ground Chicken for Dogs and Cats | Food & Beverages, Foodborne Illness | Salmonella and Listeria monocytogenes contamination | Viva Raw LLC. |  |  |
+
+Loading...
+
+Showing 1 to 10 of 1,080 entries
+
+- [First](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts#)
+- [Previous](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts#)
+- [1](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts#)
+- [2](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts#)
+- [3](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts#)
+- [4](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts#)
+- [5](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts#)
+- […](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts#)
+- [108](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts#)
+- [Next](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts#)
+- [Last](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts#)
+
+[Download XLSX](http://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts/datatables-data?page&_format=xlsx)
+
+Was this page helpful?
+\*
+
+Yes
+
+No
+
+Submit
+
+[Back to Top](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts)

@@ -1,0 +1,174 @@
+# Message Broker Configuration
+
+redis:
+  # Redis connection settings
+  host: "localhost"
+  port: 6379
+  db: 0
+  password: null
+  ssl: false
+  socket_timeout: 5
+  socket_connect_timeout: 5
+  socket_keepalive: true
+  health_check_interval: 30
+  
+  # Connection pool settings
+  max_connections: 100
+  retry_on_timeout: true
+  
+# Message settings
+messaging:
+  # Default message TTL (seconds)
+  default_ttl: 3600
+  
+  # Maximum message size (bytes)
+  max_message_size: 1048576  # 1MB
+  
+  # Message compression
+  compress_messages: true
+  compression_level: 6
+  
+  # Dead letter queue settings
+  dead_letter:
+    enabled: true
+    ttl: 86400  # 24 hours
+    max_retries: 3
+    
+# Queue configurations
+queues:
+  orchestrator:
+    priority: 1  # Critical
+    max_size: 500
+    consumer_timeout: 30
+    enable_metrics: true
+    
+  discovery:
+    priority: 2  # High
+    max_size: 200
+    consumer_timeout: 60
+    enable_metrics: true
+    
+  html_extraction:
+    priority: 3  # Normal
+    max_size: 1000
+    consumer_timeout: 45
+    enable_metrics: true
+    batch_processing: true
+    batch_size: 10
+    
+  pdf_extraction:
+    priority: 3  # Normal
+    max_size: 500
+    consumer_timeout: 120  # PDF processing can be slow
+    enable_metrics: true
+    
+  vision_extraction:
+    priority: 4  # Low (resource intensive)
+    max_size: 100
+    consumer_timeout: 300  # Vision processing is slow
+    enable_metrics: true
+    rate_limit:
+      enabled: true
+      max_per_minute: 30
+      
+  content_analysis:
+    priority: 3  # Normal
+    max_size: 500
+    consumer_timeout: 90
+    enable_metrics: true
+    
+  validation:
+    priority: 2  # High
+    max_size: 500
+    consumer_timeout: 30
+    enable_metrics: true
+    
+# Monitoring settings
+monitoring:
+  enabled: true
+  
+  # Health check interval (seconds)
+  health_check_interval: 60
+  
+  # Queue monitoring thresholds
+  thresholds:
+    warning_utilization: 0.7  # 70%
+    critical_utilization: 0.9  # 90%
+    stale_message_timeout: 1800  # 30 minutes
+    
+  # Metrics collection
+  metrics:
+    enabled: true
+    collection_interval: 30
+    retention_days: 7
+    
+  # Alerting
+  alerts:
+    enabled: true
+    channels:
+      - type: "log"
+        level: "warning"
+      # - type: "webhook"
+      #   url: "https://hooks.slack.com/services/..."
+      # - type: "email"
+      #   recipients: ["admin@company.com"]
+
+# Performance tuning
+performance:
+  # Connection pooling
+  connection_pool:
+    min_connections: 5
+    max_connections: 50
+    connection_timeout: 10
+    
+  # Message batching
+  batch_processing:
+    enabled: true
+    batch_size: 50
+    batch_timeout: 5  # seconds
+    
+  # Prefetch settings for consumers
+  prefetch:
+    count: 10
+    size: 1048576  # 1MB
+    
+# Security settings
+security:
+  # Message encryption
+  encryption:
+    enabled: false
+    algorithm: "AES-256-GCM"
+    key_rotation_days: 30
+    
+  # Access control
+  access_control:
+    enabled: false
+    # auth_token: "your-secret-token"
+    
+# Logging configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+  # Log to file
+  file:
+    enabled: true
+    path: "logs/message_broker.log"
+    max_size: "10MB"
+    backup_count: 5
+    
+  # Log to console
+  console:
+    enabled: true
+    level: "INFO"
+
+# Development/testing settings
+development:
+  # Enable debug mode
+  debug: false
+  
+  # Mock mode (use in-memory queues instead of Redis)
+  mock_mode: false
+  
+  # Test data
+  generate_test_data: false

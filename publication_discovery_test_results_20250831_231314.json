@@ -1,0 +1,50 @@
+{
+  "test_name": "Publication Discovery System Test",
+  "test_start": "2025-08-31T21:13:10.776844",
+  "phases": [
+    {
+      "phase": "publication_source_discovery",
+      "start_time": "2025-08-31T21:13:11.045356",
+      "success": true,
+      "discoveries": [],
+      "sources_discovered": 0
+    },
+    {
+      "phase": "website_analysis",
+      "start_time": "2025-08-31T21:13:13.447053",
+      "success": false,
+      "error": "'PublicationDiscoveryAgent' object has no attribute 'call_llm'"
+    },
+    {
+      "phase": "feed_monitoring",
+      "start_time": "2025-08-31T21:13:13.812850",
+      "success": true,
+      "sources_monitored": 1,
+      "feeds_processed": 1,
+      "items_discovered": 20,
+      "high_relevance_items": 0
+    },
+    {
+      "phase": "discovery_recommendations",
+      "start_time": "2025-08-31T21:13:14.644021",
+      "success": false,
+      "error": "'PublicationDiscoveryAgent' object has no attribute 'call_llm'"
+    }
+  ],
+  "test_end": "2025-08-31T21:13:14.644134",
+  "total_duration_seconds": 3.86729,
+  "final_summary": {
+    "success_rate": 50.0,
+    "system_status": "🟡 PARTIALLY WORKING",
+    "capabilities_demonstrated": [
+      "Automated discovery of regulatory publication sources",
+      "Real-time monitoring of publication feeds for new content"
+    ],
+    "phase_results": {
+      "publication_source_discovery": true,
+      "website_analysis": false,
+      "feed_monitoring": true,
+      "discovery_recommendations": false
+    }
+  }
+}

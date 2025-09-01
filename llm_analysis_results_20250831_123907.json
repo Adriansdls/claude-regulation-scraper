@@ -1,0 +1,41 @@
+{
+  "analysis_timestamp": "2025-08-31T10:39:07.163305",
+  "content_source": "extracted_content_1_20250831_123902.txt",
+  "analysis_duration_seconds": 5.018432,
+  "tokens_used": 697,
+  "analysis_results": {
+    "content_analysis": {
+      "content_type": "not_found",
+      "primary_agency": "N/A",
+      "regulation_items_count": "0",
+      "content_quality_score": "0",
+      "information_density": "low"
+    },
+    "regulatory_findings": {
+      "key_topics": [],
+      "recent_dates_mentioned": [],
+      "product_categories": [],
+      "compliance_actions": [],
+      "notable_regulations": []
+    },
+    "business_impact": {
+      "compliance_relevance": "low",
+      "industries_affected": [],
+      "urgency_indicators": [],
+      "business_implications": []
+    },
+    "monitoring_assessment": {
+      "change_frequency": "N/A",
+      "monitoring_value": "low",
+      "alert_worthiness": "routine",
+      "recommended_action": "no_action_required"
+    },
+    "content_structure": {
+      "well_structured": false,
+      "machine_readable": false,
+      "date_parsing_viable": false,
+      "extraction_difficulty": "N/A"
+    }
+  },
+  "raw_response": "```json\n{\n    \"content_analysis\": {\n        \"content_type\": \"not_found\",\n        \"primary_agency\": \"N/A\",\n        \"regulation_items_count\": \"0\",\n        \"content_quality_score\": \"0\",\n        \"information_density\": \"low\"\n    },\n    \"regulatory_findings\": {\n        \"key_topics\": [],\n        \"recent_dates_mentioned\": [],\n        \"product_categories\": [],\n        \"compliance_actions\": [],\n        \"notable_regulations\": []\n    },\n    \"business_impact\": {\n        \"compliance_relevance\": \"low\",\n        \"industries_affected\": [],\n        \"urgency_indicators\": [],\n        \"business_implications\": []\n    },\n    \"monitoring_assessment\": {\n        \"change_frequency\": \"N/A\",\n        \"monitoring_value\": \"low\",\n        \"alert_worthiness\": \"routine\",\n        \"recommended_action\": \"no_action_required\"\n    },\n    \"content_structure\": {\n        \"well_structured\": false,\n        \"machine_readable\": false,\n        \"date_parsing_viable\": false,\n        \"extraction_difficulty\": \"N/A\"\n    }\n}\n```"
+}

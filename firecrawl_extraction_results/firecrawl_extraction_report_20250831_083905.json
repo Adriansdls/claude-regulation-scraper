@@ -1,0 +1,77 @@
+{
+  "test_summary": {
+    "test_name": "Firecrawl-Enhanced Regulation Extraction Test",
+    "test_timestamp": "2025-08-31T08:39:05.231913",
+    "total_sites": 4,
+    "successful_extractions": 0,
+    "success_rate": 0.0,
+    "extraction_method": "firecrawl_ai_powered"
+  },
+  "site_results": [
+    {
+      "name": "UK Data Protection Act 2018",
+      "url": "https://www.legislation.gov.uk/ukpga/2018/12/section/1",
+      "jurisdiction": "UK",
+      "description": "UK primary legislation on data protection",
+      "test_timestamp": "2025-08-31T08:38:57.227828",
+      "stages": {
+        "firecrawl_extraction": {
+          "success": false,
+          "error": "'dict' object has no attribute 'strip'",
+          "url": "https://www.legislation.gov.uk/ukpga/2018/12/section/1"
+        }
+      },
+      "overall_status": "FAILED"
+    },
+    {
+      "name": "UK GDPR Regulations",
+      "url": "https://www.legislation.gov.uk/uksi/2019/419/regulation/1",
+      "jurisdiction": "UK",
+      "description": "UK GDPR implementation regulations",
+      "test_timestamp": "2025-08-31T08:38:59.228468",
+      "stages": {
+        "firecrawl_extraction": {
+          "success": false,
+          "error": "'dict' object has no attribute 'strip'",
+          "url": "https://www.legislation.gov.uk/uksi/2019/419/regulation/1"
+        }
+      },
+      "overall_status": "FAILED"
+    },
+    {
+      "name": "US Privacy Act",
+      "url": "https://www.ecfr.gov/current/title-5/chapter-I/subchapter-A/part-5",
+      "jurisdiction": "US",
+      "description": "US federal privacy regulations",
+      "test_timestamp": "2025-08-31T08:39:01.229408",
+      "stages": {
+        "firecrawl_extraction": {
+          "success": false,
+          "error": "'dict' object has no attribute 'strip'",
+          "url": "https://www.ecfr.gov/current/title-5/chapter-I/subchapter-A/part-5"
+        }
+      },
+      "overall_status": "FAILED"
+    },
+    {
+      "name": "EU GDPR Article 6",
+      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32016R0679&from=EN#d1e1888-1-1",
+      "jurisdiction": "EU",
+      "description": "EU GDPR lawfulness of processing",
+      "test_timestamp": "2025-08-31T08:39:03.230951",
+      "stages": {
+        "firecrawl_extraction": {
+          "success": false,
+          "error": "'dict' object has no attribute 'strip'",
+          "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32016R0679&from=EN#d1e1888-1-1"
+        }
+      },
+      "overall_status": "FAILED"
+    }
+  ],
+  "system_info": {
+    "firecrawl_available": true,
+    "openai_available": true,
+    "extraction_agent": "FirecrawlExtractorAgent"
+  }
+}

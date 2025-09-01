@@ -1,0 +1,72 @@
+{
+  "test_summary": {
+    "test_name": "Daily Monitoring System Test",
+    "test_timestamp": "2025-08-31T10:16:47.203144",
+    "total_tests": 4,
+    "successful_tests": 3,
+    "success_rate": 75.0
+  },
+  "individual_test_results": [
+    {
+      "test": "monitoring_setup",
+      "success": true,
+      "targets_configured": 4,
+      "target_details": [
+        {
+          "name": "US CPSC Product Safety Updates",
+          "url": "https://www.cpsc.gov/Newsroom/News-Releases",
+          "type": "regulatory_agency"
+        },
+        {
+          "name": "UK Product Safety Legislation",
+          "url": "https://www.legislation.gov.uk/browse/business/consumer-protection",
+          "type": "legislation_database"
+        },
+        {
+          "name": "EU Product Safety Regulations",
+          "url": "https://eur-lex.europa.eu/browse/directories/legislation.html",
+          "type": "legislation_database"
+        },
+        {
+          "name": "FDA Product Safety Alerts",
+          "url": "https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts",
+          "type": "regulatory_agency"
+        }
+      ]
+    },
+    {
+      "test": "change_detection",
+      "success": true,
+      "baseline_established": true,
+      "content_length": 16541,
+      "false_positive_check": true
+    },
+    {
+      "test": "compliance_classification",
+      "success": false,
+      "error": "'ComplianceClassifierAgent' object has no attribute 'call_llm'"
+    },
+    {
+      "test": "daily_monitoring_workflow",
+      "success": true,
+      "workflow_summary": {
+        "workflow_completed": "2025-08-31T10:16:47.202043",
+        "duration_seconds": 11.259483,
+        "targets_monitored": 5,
+        "changes_detected": 0,
+        "compliance_relevant": 0,
+        "high_priority_alerts": 0,
+        "errors_encountered": 0,
+        "success_rate": 100.0
+      },
+      "alerts_generated": 0,
+      "results_file": "daily_monitoring_test_results/workflow_test_results_20250831_101647.json"
+    }
+  ],
+  "system_capabilities": {
+    "change_detection": true,
+    "compliance_classification": false,
+    "daily_monitoring_workflow": true,
+    "monitoring_setup": true
+  }
+}

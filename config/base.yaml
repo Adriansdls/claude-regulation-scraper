@@ -1,0 +1,244 @@
+# Base Configuration
+# Common settings shared across all environments
+
+# General settings
+debug: false
+
+# Database configuration
+database:
+  host: "localhost"
+  port: 5432
+  database: "regulations_db"
+  username: "postgres"
+  password: ""
+  ssl_mode: "prefer"
+  pool_size: 10
+  max_overflow: 20
+  pool_timeout: 30
+  pool_recycle: 3600
+
+# Redis configuration
+redis:
+  host: "localhost"
+  port: 6379
+  db: 0
+  password: null
+  ssl: false
+  socket_timeout: 5
+  socket_connect_timeout: 5
+  socket_keepalive: true
+  health_check_interval: 30
+  max_connections: 100
+  retry_on_timeout: true
+
+# OpenAI configuration
+openai:
+  api_key: null  # Set via OPENAI_API_KEY environment variable
+  organization: null
+  base_url: "https://api.openai.com/v1"
+  default_model: "gpt-4o-mini"
+  vision_model: "gpt-4o-mini"
+  embedding_model: "text-embedding-3-large"
+  max_tokens: 4000
+  temperature: 0.1
+  timeout: 60
+  max_retries: 3
+  request_delay: 0.1
+  rate_limit_rpm: 3000  # requests per minute
+  rate_limit_tpm: 150000  # tokens per minute
+
+# API configuration
+api:
+  host: "0.0.0.0"
+  port: 8000
+  debug: false
+  reload: false
+  workers: 4
+  access_log: true
+  cors_enabled: true
+  cors_origins: ["*"]
+  rate_limiting:
+    enabled: true
+    requests_per_minute: 100
+  auth_enabled: false
+  auth_token: null
+
+# Logging configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file_enabled: true
+  file_path: "logs/regulation_scraper.log"
+  file_max_size: "10MB"
+  file_backup_count: 5
+  console_enabled: true
+  console_level: "INFO"
+
+# Monitoring configuration
+monitoring:
+  enabled: true
+  health_check_interval: 60
+  metrics_enabled: true
+  metrics_port: 9090
+  alert_enabled: true
+  alert_thresholds:
+    memory_usage_mb: 1000
+    cpu_usage_percent: 80
+    error_rate_percent: 5
+    queue_size_warning: 100
+    queue_size_critical: 500
+
+# Security configuration
+security:
+  encryption_enabled: false
+  encryption_key: null
+  api_key_required: false
+  rate_limiting_enabled: true
+  max_requests_per_minute: 100
+  ip_whitelist: []
+  ip_blacklist: []
+
+# Caching configuration
+cache:
+  redis_enabled: true
+  redis_host: "localhost"
+  redis_port: 6379
+  redis_password: null
+  redis_db: 0
+  local_cache_size_mb: 256
+  file_cache_dir: "./cache"
+  file_cache_threshold: 1048576  # 1MB - store larger items in files
+  compression_enabled: true
+  default_ttl_hours: 24
+
+# Performance optimization
+optimization:
+  enabled: true
+  max_concurrent_requests: 20
+  max_parallel_extractions: 5
+  batch_processing_enabled: true
+  request_deduplication: true
+  smart_retry_enabled: true
+  cache_aggressive: true
+
+# Extraction configuration
+extraction:
+  max_document_size: 10485760  # 10MB
+  max_documents_per_job: 1000
+  pdf_ocr_enabled: true
+  vision_processing_enabled: true
+  text_quality_threshold: 0.6
+  confidence_threshold: 0.7
+  languages: ["en"]
+
+# Agent configurations
+agents:
+  # Discovery Agent
+  discovery:
+    enabled: true
+    max_concurrent_jobs: 3
+    request_delay: 2.0
+    timeout: 60
+    max_retries: 3
+    user_agent: "RegulationScraper-Discovery/1.0"
+    batch_size: 5
+    rate_limit:
+      enabled: true
+      max_per_minute: 30
+
+  # HTML Extraction Agent
+  html_extraction:
+    enabled: true
+    max_concurrent_jobs: 5
+    request_delay: 1.0
+    timeout: 45
+    max_retries: 3
+    user_agent: "RegulationScraper-HTML/1.0"
+    batch_size: 10
+    rate_limit:
+      enabled: true
+      max_per_minute: 60
+
+  # PDF Extraction Agent
+  pdf_extraction:
+    enabled: true
+    max_concurrent_jobs: 3
+    request_delay: 1.5
+    timeout: 120
+    max_retries: 2
+    user_agent: "RegulationScraper-PDF/1.0"
+    batch_size: 5
+    rate_limit:
+      enabled: true
+      max_per_minute: 30
+
+  # Vision Extraction Agent
+  vision_extraction:
+    enabled: true
+    max_concurrent_jobs: 2
+    request_delay: 2.0
+    timeout: 300
+    max_retries: 2
+    user_agent: "RegulationScraper-Vision/1.0"
+    batch_size: 3
+    rate_limit:
+      enabled: true
+      max_per_minute: 20
+
+  # Content Analysis Agent
+  content_analysis:
+    enabled: true
+    max_concurrent_jobs: 4
+    request_delay: 1.0
+    timeout: 90
+    max_retries: 3
+    user_agent: "RegulationScraper-Content/1.0"
+    batch_size: 8
+    rate_limit:
+      enabled: true
+      max_per_minute: 50
+
+  # Validation Agent
+  validation:
+    enabled: true
+    max_concurrent_jobs: 5
+    request_delay: 0.5
+    timeout: 30
+    max_retries: 2
+    user_agent: "RegulationScraper-Validation/1.0"
+    batch_size: 15
+    rate_limit:
+      enabled: false
+
+# Custom settings
+custom:
+  # Website-specific settings
+  website_profiles:
+    cache_duration_hours: 24
+    update_threshold_days: 7
+    
+  # Content processing
+  text_processing:
+    min_paragraph_length: 50
+    max_paragraph_length: 5000
+    language_detection_threshold: 0.8
+    
+  # Quality assurance
+  quality_assurance:
+    min_confidence_score: 0.6
+    duplicate_threshold: 0.9
+    content_similarity_threshold: 0.8
+    
+  # Performance tuning
+  performance:
+    enable_caching: true
+    cache_ttl_seconds: 3600
+    enable_compression: true
+    compression_level: 6
+    
+  # Legal compliance
+  legal_compliance:
+    respect_robots_txt: true
+    default_crawl_delay: 1.0
+    max_pages_per_domain: 1000
+    user_agent_contact: "admin@company.com"

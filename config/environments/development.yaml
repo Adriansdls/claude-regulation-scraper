@@ -1,0 +1,131 @@
+# Development Environment Configuration
+# Settings specific to development environment
+
+# Enable debug mode
+debug: true
+
+# Database configuration
+database:
+  database: "regulations_dev"
+  pool_size: 5
+  max_overflow: 10
+
+# Redis configuration
+redis:
+  db: 1  # Use separate Redis DB for development
+
+# API configuration
+api:
+  debug: true
+  reload: true
+  workers: 1
+  cors_origins: 
+    - "http://localhost:3000"
+    - "http://localhost:8080"
+    - "http://127.0.0.1:3000"
+    - "http://127.0.0.1:8080"
+
+# Logging configuration
+logging:
+  level: "DEBUG"
+  console_level: "DEBUG"
+  file_path: "logs/development.log"
+
+# Monitoring configuration
+monitoring:
+  health_check_interval: 30
+  alert_enabled: false  # Disable alerts in development
+
+# Security configuration - relaxed for development
+security:
+  api_key_required: false
+  rate_limiting_enabled: false
+  max_requests_per_minute: 1000
+
+# Extraction configuration - more permissive for testing
+extraction:
+  max_documents_per_job: 100  # Smaller limit for testing
+  pdf_ocr_enabled: true
+  vision_processing_enabled: true
+  text_quality_threshold: 0.4  # Lower threshold for testing
+  confidence_threshold: 0.5    # Lower threshold for testing
+
+# Agent configurations - faster processing for development
+agents:
+  discovery:
+    max_concurrent_jobs: 2
+    request_delay: 0.5
+    timeout: 30
+    rate_limit:
+      enabled: false
+
+  html_extraction:
+    max_concurrent_jobs: 3
+    request_delay: 0.5
+    timeout: 30
+    rate_limit:
+      enabled: false
+
+  pdf_extraction:
+    max_concurrent_jobs: 2
+    request_delay: 0.5
+    timeout: 60
+    rate_limit:
+      enabled: false
+
+  vision_extraction:
+    max_concurrent_jobs: 1
+    request_delay: 1.0
+    timeout: 120
+    rate_limit:
+      enabled: false
+
+  content_analysis:
+    max_concurrent_jobs: 2
+    request_delay: 0.5
+    timeout: 45
+    rate_limit:
+      enabled: false
+
+  validation:
+    max_concurrent_jobs: 3
+    request_delay: 0.1
+    timeout: 15
+    rate_limit:
+      enabled: false
+
+# Custom settings for development
+custom:
+  # Enable additional debugging features
+  development:
+    enable_debug_endpoints: true
+    enable_test_data_generation: true
+    log_sql_queries: true
+    
+  # Website profiles - shorter cache for development
+  website_profiles:
+    cache_duration_hours: 1
+    update_threshold_days: 1
+    
+  # Performance - disable some optimizations for debugging
+  performance:
+    enable_caching: false
+    enable_compression: false
+    
+  # Quality assurance - more lenient for testing
+  quality_assurance:
+    min_confidence_score: 0.3
+    duplicate_threshold: 0.7
+    content_similarity_threshold: 0.6
+    
+  # Legal compliance - more permissive for development
+  legal_compliance:
+    respect_robots_txt: false  # Can ignore robots.txt in development
+    default_crawl_delay: 0.5
+    max_pages_per_domain: 50   # Smaller limit for testing
+    
+  # Testing configuration
+  testing:
+    use_mock_data: false
+    mock_external_apis: false
+    enable_test_endpoints: true

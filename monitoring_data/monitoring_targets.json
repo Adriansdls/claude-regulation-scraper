@@ -1,0 +1,62 @@
+[
+  {
+    "id": "ed310b37e76b",
+    "name": "US CPSC Product Safety Updates",
+    "url": "https://www.cpsc.gov/Newsroom/News-Releases",
+    "website_type": "regulatory_agency",
+    "monitoring_frequency": "daily",
+    "change_indicators": [],
+    "last_checked": "2025-08-31T10:16:37.205198",
+    "last_content_hash": "70991448bab209e091fb7498bd892cf7cde9b01d814478fc9e774f81916d75d6",
+    "baseline_content": "[Skip to main content](https://www.cpsc.gov/Newsroom/News-Releases#main-content)\n\n# Newsroom Press Releases\n\n- English\n\n- [Español](https://www.cpsc.gov/es/Newsroom/News-Releases \"View this page in Español\")\n\nSearchExport CSV\n\nMonth\n\n\\- Any -JanuaryFebruaryMarchAprilMayJuneJulyAugustSeptemberOctoberNovemberDecember\n\nYear\n\n\\- Any -19731974197519761977197819791980198119821983198419851986198719881989199019911992199319941995199619971998199920002001200220032004200520062007200820092010201120122013201420152016201720182019202020212022202320242025\n\nType\n\n\\- Any -Civil PenaltyComplaint FiledConsent DecreeDecision\n\nSearch\n\nMonth\n\n\\- Any -JanuaryFebruaryMarchAprilMayJuneJulyAugustSeptemberOctoberNovemberDecember\n\nYear\n\n\\- Any -19731974197519761977197819791980198119821983198419851986198719881989199019911992199319941995199619971998199920002001200220032004200520062007200820092010201120122013201420152016201720182019202020212022202320242025\n\nType\n\n\\- Any -Civil PenaltyComplaint FiledConsent DecreeDecis",
+    "change_detection_strategy": "content_hash"
+  },
+  {
+    "id": "a4aa107f88c0",
+    "name": "UK Product Safety Legislation",
+    "url": "https://www.legislation.gov.uk/browse/business/consumer-protection",
+    "website_type": "legislation_database",
+    "monitoring_frequency": "daily",
+    "change_indicators": [],
+    "last_checked": "2025-08-31T10:16:39.361258",
+    "last_content_hash": "6c7ae5996f316a478781a31124db649e7ad2c684b34c7e888a824c9b165e3502",
+    "baseline_content": "- [Skip to main content](https://www.legislation.gov.uk/browse/business/consumer-protection#pageTitle)\n- [Skip to navigation](https://www.legislation.gov.uk/browse/business/consumer-protection#primaryNav)\n\n## Cookies on Legislation.gov.uk\n\nThe cookies on legislation.gov.uk do two things: they remember any settings you've chosen so you don't have to choose them on every page, and they help us understand how people browse our website, so we can make improvements and fix problems. We need your consent to use some of these cookies.\n\n- Yes, these cookies are OK\n- [Find out more or set individual cookie preferences](https://www.legislation.gov.uk/cookiepolicy)\n- No, I want to reject all cookies\n\n- [Home](https://www.legislation.gov.uk/)\n- [Explore our collections](https://www.legislation.gov.uk/explore)\n- [Research tools](https://www.legislation.gov.uk/research-tools)\n- [Help and guidance](https://www.legislation.gov.uk/help)\n- [What's new](https://www.legislation.gov.uk/new)\n- [About us](ht",
+    "change_detection_strategy": "content_hash"
+  },
+  {
+    "id": "241af1d7943d",
+    "name": "EU Product Safety Regulations",
+    "url": "https://eur-lex.europa.eu/browse/directories/legislation.html",
+    "website_type": "legislation_database",
+    "monitoring_frequency": "daily",
+    "change_indicators": [],
+    "last_checked": "2025-08-31T10:16:41.702123",
+    "last_content_hash": "0f246cb86ca58a0866ffce69b0c209c3ff8f151653138c8e777fdc94152d2394",
+    "baseline_content": "![](https://webtools.europa.eu/images/flags/eu.svg)An official website of the European UnionAn official EU website\nHow do you know?\n\n\n\nThis site uses cookies. Visit our [cookies policy page](https://eur-lex.europa.eu/content/legal-notice/legal-notice.html?locale=en#5.%20Cookies%20notice) or click the link in any footer for more information and to change your preferences.\n\n[Accept all cookies](https://eur-lex.europa.eu/browse/directories/legislation.html#accept) [Accept only essential cookies](https://eur-lex.europa.eu/browse/directories/legislation.html#refuse)\n\n[Skip to main content](https://eur-lex.europa.eu/browse/directories/legislation.html#MainContent)\n\n![](https://eur-lex.europa.eu/images/eu-logo/logo-eu-en-01.jpg)\n\nEUR-Lex\n\n\nAccess to European Union law\n\n\nThis document is an excerpt from the EUR-Lex website\n\n\nYou are here\n\n1. [EUROPA](https://europa.eu/european-union/index_en)\n2. [EUR-Lex home](https://eur-lex.europa.eu/homepage.html \"EUR-Lex home\")\n3. EU law\n4. [Legal acts](ht",
+    "change_detection_strategy": "content_hash"
+  },
+  {
+    "id": "c0c1bd140b54",
+    "name": "FDA Product Safety Alerts",
+    "url": "https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts",
+    "website_type": "regulatory_agency",
+    "monitoring_frequency": "daily",
+    "change_indicators": [],
+    "last_checked": "2025-08-31T10:16:44.045541",
+    "last_content_hash": "9f2467630d73b256af804a51f7081c62d3625f45eb129c7bdf31fa8225097926",
+    "baseline_content": "- [Skip to main content](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts#main-content)\n- [Skip to FDA Search](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts#search-form)\n- [Skip to in this section menu](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts#section-nav)\n- [Skip to footer links](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts#footer)\n\n[In this section:\\\\\n\\\\\nSafety](https://www.fda.gov/safety/recalls-market-withdrawals-safety-alerts#section-nav)\n\n1. [Home](https://www.fda.gov/)\n2. [Safety](https://www.fda.gov/safety)\n3. Recalls, Market Withdrawals, & Safety Alerts\n\n1. [Safety](https://www.fda.gov/safety \"Safety\")\n\nThe list below provides information gathered from press releases and other public notices about certain recalls of FDA-regulated products. Not all recalls have press releases or are posted on this page. See [Additional information about recalls](https://www.fda.gov/safety/recalls-market-w",
+    "change_detection_strategy": "content_hash"
+  },
+  {
+    "id": "b41a57138747",
+    "name": "UK GDPR Test Section",
+    "url": "https://www.legislation.gov.uk/uksi/2019/419/regulation/1",
+    "website_type": "legislation_database",
+    "monitoring_frequency": "daily",
+    "change_indicators": [],
+    "last_checked": "2025-08-31T10:16:46.199601",
+    "last_content_hash": "455ab1fe059d5caa4e244e7ced03c95895d8dfcc66ff91592939d33c1b2dcdde",
+    "baseline_content": "- [Skip to main content](https://www.legislation.gov.uk/uksi/2019/419/regulation/1#pageTitle)\n- [Skip to navigation](https://www.legislation.gov.uk/uksi/2019/419/regulation/1#primaryNav)\n\n## Cookies on Legislation.gov.uk\n\nThe cookies on legislation.gov.uk do two things: they remember any settings you've chosen so you don't have to choose them on every page, and they help us understand how people browse our website, so we can make improvements and fix problems. We need your consent to use some of these cookies.\n\n- Yes, these cookies are OK\n- [Find out more or set individual cookie preferences](https://www.legislation.gov.uk/cookiepolicy)\n- No, I want to reject all cookies\n\n- [Home](https://www.legislation.gov.uk/)\n- [Explore our collections](https://www.legislation.gov.uk/explore)\n- [Research tools](https://www.legislation.gov.uk/research-tools)\n- [Help and guidance](https://www.legislation.gov.uk/help)\n- [What's new](https://www.legislation.gov.uk/new)\n- [About us](https://www.legislat",
+    "change_detection_strategy": "content_hash"
+  }
+]
