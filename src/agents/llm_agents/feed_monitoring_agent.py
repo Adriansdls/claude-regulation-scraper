@@ -17,6 +17,8 @@ from urllib.parse import urljoin, urlparse
 from .base_agent import BaseLLMAgent, AgentRole, AgentContext
 from ...infrastructure.message_broker import MessageType
 from .publication_discovery_agent import PublicationSource, PublicationSourceType
+from .publication_page_intelligence_agent import PublicationPageIntelligenceAgent
+from ...models.learning_models import JurisdictionKnowledgeBase, LearningSession
 
 
 class FeedItemStatus(str, Enum):
@@ -73,7 +75,7 @@ class FeedMonitoringSession:
 class FeedMonitoringAgent(BaseLLMAgent):
     """AI-powered agent for monitoring publication feeds and discovering new regulations"""
     
-    def __init__(self, broker, discovery_agent=None, storage_path: str = "./feed_monitoring_data"):
+    def __init__(self, broker, discovery_agent=None, storage_path: str = "./feed_monitoring_data", knowledge_base_path: str = "./learning_data"):
         system_prompt = """You are an expert feed monitoring agent specialized in processing RSS feeds, APIs, and publication sources to discover new regulatory content daily.
 
 Your expertise covers:
@@ -111,6 +113,14 @@ Always provide actionable monitoring results that help compliance teams stay cur
         
         # Reference to discovery agent for accessing sources
         self.discovery_agent = discovery_agent
+        
+        # Initialize Publication Page Intelligence Agent and Knowledge Base
+        self.knowledge_base = JurisdictionKnowledgeBase(knowledge_base_path)
+        self.page_intelligence_agent = PublicationPageIntelligenceAgent(
+            broker=broker,
+            storage_path=storage_path + "/intelligence_data",
+            knowledge_base=self.knowledge_base
+        )
         
         # Storage setup
         from pathlib import Path
@@ -204,6 +214,40 @@ Always provide actionable monitoring results that help compliance teams stay cur
                     }
                 },
                 "required": []
+            }
+        )
+        
+        self.register_tool(
+            name="get_learning_insights",
+            function=self._get_learning_insights,
+            description="Get insights about learned patterns and extraction performance",
+            parameters={
+                "type": "object",
+                "properties": {
+                    "jurisdiction": {"type": "string", "description": "Jurisdiction to analyze (optional)"},
+                    "source_id": {"type": "string", "description": "Specific source to analyze (optional)"},
+                    "days_back": {"type": "number", "description": "Number of days to include in analysis (default: 7)"}
+                },
+                "required": []
+            }
+        )
+        
+        self.register_tool(
+            name="smart_extraction_strategy",
+            function=self._smart_extraction_strategy,
+            description="Execute smart extraction strategy using learned patterns and adaptive techniques",
+            parameters={
+                "type": "object",
+                "properties": {
+                    "source_ids": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Source IDs to apply smart extraction to"
+                    },
+                    "optimize_patterns": {"type": "boolean", "description": "Whether to optimize patterns before extraction"},
+                    "use_adaptive_selection": {"type": "boolean", "description": "Whether to use adaptive pattern selection"}
+                },
+                "required": ["source_ids"]
             }
         )
 
@@ -412,6 +456,9 @@ Always provide actionable monitoring results that help compliance teams stay cur
             self.monitoring_sessions.append(session)
             await self._save_monitoring_data()
             
+            # Get learning insights for this session
+            learning_insights = await self._get_learning_insights(days_back=1)
+            
             result = {
                 "success": True,
                 "session_id": session_id,
@@ -428,7 +475,8 @@ Always provide actionable monitoring results that help compliance teams stay cur
                     "success_rate": (session.feeds_processed / session.sources_checked * 100) if session.sources_checked > 0 else 0,
                     "items_per_source": session.items_discovered / session.sources_checked if session.sources_checked > 0 else 0,
                     "relevance_rate": len(high_relevance_items) / session.new_items * 100 if session.new_items > 0 else 0
-                }
+                },
+                "learning_insights": learning_insights.get("insights", {}) if learning_insights.get("success") else {}
             }
             
             self.logger.info(f"Monitoring session complete: {session.new_items} new items, {len(high_relevance_items)} high relevance")
@@ -585,87 +633,113 @@ Always provide actionable monitoring results that help compliance teams stay cur
             return []
 
     async def _parse_html_feed(self, content: str, feed_url: str, source_id: str) -> List[Dict]:
-        """Parse HTML page using LLM to identify publication items"""
+        """Parse HTML page using Publication Page Intelligence Agent with learning capabilities"""
         try:
-            # Use LLM to parse HTML for publication items
-            parsing_prompt = f"""Analyze this HTML content from a regulatory publication source to identify new publications, regulations, or regulatory updates.
-
-SOURCE URL: {feed_url}
-SOURCE ID: {source_id}
-
-HTML CONTENT (first 8000 chars):
-{content[:8000]}...
-
-Extract publication items from this page and return in JSON format:
-
-{{
-    "publications_found": [
-        {{
-            "title": "publication title",
-            "url": "full URL to the publication",
-            "content_snippet": "brief description or summary", 
-            "published_date": "date if found (YYYY-MM-DD format)",
-            "item_type": "regulation|guidance|alert|news_release|notice",
-            "keywords": ["relevant keywords"],
-            "relevance_score": 0.0-1.0
-        }}
-    ],
-    "parsing_notes": ["notes about what was found or parsing challenges"]
-}}
-
-Look for:
-1. Recent publications, news releases, or regulatory announcements
-2. Links to specific regulations or guidance documents  
-3. Publication dates, effective dates, or "new" indicators
-4. Titles and descriptions that indicate regulatory content
-5. Government or agency-specific publication patterns
-
-Focus on finding items that appear to be new or recently published regulatory content."""
-
-            context = AgentContext(
-                session_id=f"html_parsing_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}",
-                correlation_id=feed_url,
-                metadata={"parsing_type": "html_feed", "source_id": source_id, "url": feed_url}
+            # Get jurisdiction from source_id (could be improved with better source metadata)
+            if self.discovery_agent and hasattr(self.discovery_agent, 'discovered_sources'):
+                source = self.discovery_agent.discovered_sources.get(source_id)
+                jurisdiction = source.jurisdiction if source else "unknown"
+            else:
+                jurisdiction = "unknown"
+            
+            # Create learning session ID
+            session_id = f"monitoring_extraction_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}"
+            
+            # Use the Publication Page Intelligence Agent for smart extraction
+            extraction_result = await self.page_intelligence_agent._analyze_daily_publication_page(
+                page_url=feed_url,
+                source_id=source_id,
+                jurisdiction=jurisdiction,
+                use_learning=True
             )
             
-            response = await self.generate_response(parsing_prompt, context)
-            
-            if response:
-                try:
-                    import re
-                    json_match = re.search(r'\{.*\}', response, re.DOTALL)
-                    if json_match:
-                        parsing_result = json.loads(json_match.group())
-                        
-                        items = []
-                        for pub in parsing_result.get('publications_found', []):
-                            # Ensure URL is absolute
-                            pub_url = pub.get('url', '')
-                            if pub_url and not pub_url.startswith('http'):
-                                pub_url = urljoin(feed_url, pub_url)
-                            
-                            if pub.get('title') and pub_url:
-                                item_data = {
-                                    "title": pub['title'],
-                                    "url": pub_url,
-                                    "content_snippet": pub.get('content_snippet', '')[:500],
-                                    "published_date": pub.get('published_date'),
-                                    "source_id": source_id,
-                                    "item_type": pub.get('item_type', 'unknown'),
-                                    "keywords": pub.get('keywords', []),
-                                    "relevance_score": pub.get('relevance_score', 0.5)
-                                }
-                                items.append(item_data)
-                        
-                        return items
-                        
-                except json.JSONDecodeError as e:
-                    self.logger.error(f"Error parsing HTML feed JSON response: {e}")
+            if extraction_result.get('success'):
+                publications = extraction_result.get('publications', [])
+                
+                # Convert to feed monitoring format
+                items = []
+                for pub in publications:
+                    # Handle both dict and PublicationItem formats
+                    if hasattr(pub, 'to_dict'):
+                        pub_dict = pub.to_dict() if hasattr(pub, 'to_dict') else pub
+                    else:
+                        pub_dict = pub
                     
-            return []
+                    # Ensure URL is absolute
+                    pub_url = pub_dict.get('url', '')
+                    if pub_url and not pub_url.startswith('http'):
+                        pub_url = urljoin(feed_url, pub_url)
+                    
+                    if pub_dict.get('title') and pub_url:
+                        item_data = {
+                            "title": pub_dict['title'],
+                            "url": pub_url,
+                            "content_snippet": pub_dict.get('content_snippet', '')[:500],
+                            "published_date": pub_dict.get('published_date'),
+                            "source_id": source_id,
+                            "item_type": pub_dict.get('item_type', 'unknown'),
+                            "keywords": pub_dict.get('keywords', []),
+                            "relevance_score": pub_dict.get('confidence_score', 0.5)
+                        }
+                        items.append(item_data)
+                
+                # Record successful learning session
+                if items:
+                    learning_session = LearningSession(
+                        session_id=session_id,
+                        timestamp=datetime.utcnow(),
+                        source_id=source_id,
+                        jurisdiction=jurisdiction,
+                        extraction_method="publication_page_intelligence",
+                        patterns_used=extraction_result.get('patterns_used', []),
+                        success=True,
+                        items_found=len(items),
+                        extraction_time=extraction_result.get('processing_time', 0.0),
+                        new_patterns_discovered=extraction_result.get('new_patterns_learned', []),
+                        patterns_reinforced=extraction_result.get('patterns_reinforced', []),
+                        notes=[f"Successfully extracted {len(items)} publications using intelligent page analysis"]
+                    )
+                    self.knowledge_base.record_learning_session(learning_session)
+                
+                self.logger.info(f"Intelligent extraction found {len(items)} publications from {feed_url}")
+                return items
+            else:
+                # Record failed learning session
+                error_msg = extraction_result.get('error', 'Unknown error')
+                learning_session = LearningSession(
+                    session_id=session_id,
+                    timestamp=datetime.utcnow(),
+                    source_id=source_id,
+                    jurisdiction=jurisdiction,
+                    extraction_method="publication_page_intelligence",
+                    success=False,
+                    error_message=error_msg,
+                    notes=[f"Failed intelligent extraction: {error_msg}"]
+                )
+                self.knowledge_base.record_learning_session(learning_session)
+                
+                self.logger.warning(f"Intelligent extraction failed for {feed_url}: {error_msg}")
+                return []
             
         except Exception as e:
-            self.logger.error(f"Error parsing HTML feed: {e}")
+            self.logger.error(f"Error in intelligent HTML feed parsing: {e}")
+            # Record exception in learning session
+            try:
+                session_id = f"monitoring_extraction_error_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}"
+                learning_session = LearningSession(
+                    session_id=session_id,
+                    timestamp=datetime.utcnow(),
+                    source_id=source_id,
+                    jurisdiction=jurisdiction or "unknown",
+                    extraction_method="publication_page_intelligence",
+                    success=False,
+                    error_message=str(e),
+                    notes=[f"Exception during intelligent extraction: {str(e)}"]
+                )
+                self.knowledge_base.record_learning_session(learning_session)
+            except:
+                pass  # Don't fail if learning session recording fails
+            
             return []
 
     async def _analyze_feed_item(
@@ -831,6 +905,328 @@ Focus on identifying actual regulatory substance and business impact."""
             
         except Exception as e:
             self.logger.error(f"Error getting today's discoveries: {e}")
+            return {"success": False, "error": str(e)}
+    
+    async def _get_learning_insights(
+        self,
+        jurisdiction: str = None,
+        source_id: str = None,
+        days_back: int = 7
+    ) -> Dict[str, Any]:
+        """Get insights about learned patterns and extraction performance"""
+        try:
+            cutoff_date = datetime.utcnow() - timedelta(days=days_back)
+            
+            # Get recent learning sessions
+            recent_sessions = []
+            for session in self.knowledge_base.learning_sessions:
+                # Handle both datetime and string timestamps
+                if isinstance(session.timestamp, str):
+                    try:
+                        session_time = datetime.fromisoformat(session.timestamp)
+                    except:
+                        continue  # Skip invalid timestamps
+                else:
+                    session_time = session.timestamp
+                
+                # Apply filters
+                if (session_time > cutoff_date and
+                    (not jurisdiction or session.jurisdiction == jurisdiction) and
+                    (not source_id or session.source_id == source_id)):
+                    recent_sessions.append(session)
+            
+            if not recent_sessions:
+                return {
+                    "success": True,
+                    "insights": {
+                        "message": "No learning sessions found for the specified criteria",
+                        "total_sessions": 0
+                    }
+                }
+            
+            # Calculate performance metrics
+            successful_sessions = [s for s in recent_sessions if s.success]
+            total_items = sum(s.items_found for s in successful_sessions)
+            total_patterns_discovered = sum(len(s.new_patterns_discovered) for s in recent_sessions)
+            total_patterns_reinforced = sum(len(s.patterns_reinforced) for s in recent_sessions)
+            
+            # Analyze extraction methods
+            extraction_methods = {}
+            for session in recent_sessions:
+                method = session.extraction_method
+                if method not in extraction_methods:
+                    extraction_methods[method] = {"total": 0, "successful": 0, "items_found": 0}
+                extraction_methods[method]["total"] += 1
+                if session.success:
+                    extraction_methods[method]["successful"] += 1
+                    extraction_methods[method]["items_found"] += session.items_found
+            
+            # Get pattern statistics from knowledge base
+            pattern_stats = {}
+            if jurisdiction:
+                jurisdiction_profile = self.knowledge_base.jurisdiction_profiles.get(jurisdiction)
+                if jurisdiction_profile:
+                    for source_profile in jurisdiction_profile.source_profiles.values():
+                        if not source_id or source_profile.source_id == source_id:
+                            for pattern in source_profile.extraction_patterns.values():
+                                confidence_level = pattern.get_confidence_level().value
+                                pattern_stats[confidence_level] = pattern_stats.get(confidence_level, 0) + 1
+            
+            insights = {
+                "analysis_period": {
+                    "days_back": days_back,
+                    "start_date": cutoff_date.isoformat(),
+                    "end_date": datetime.utcnow().isoformat()
+                },
+                "session_summary": {
+                    "total_sessions": len(recent_sessions),
+                    "successful_sessions": len(successful_sessions),
+                    "success_rate": len(successful_sessions) / len(recent_sessions) * 100 if recent_sessions else 0,
+                    "total_items_extracted": total_items,
+                    "avg_items_per_successful_session": total_items / len(successful_sessions) if successful_sessions else 0
+                },
+                "learning_activity": {
+                    "new_patterns_discovered": total_patterns_discovered,
+                    "patterns_reinforced": total_patterns_reinforced,
+                    "learning_velocity": (total_patterns_discovered + total_patterns_reinforced) / days_back
+                },
+                "extraction_methods": {
+                    method: {
+                        "success_rate": stats["successful"] / stats["total"] * 100 if stats["total"] > 0 else 0,
+                        "avg_items_found": stats["items_found"] / stats["successful"] if stats["successful"] > 0 else 0,
+                        "total_uses": stats["total"]
+                    }
+                    for method, stats in extraction_methods.items()
+                },
+                "pattern_confidence_distribution": pattern_stats,
+                "recent_errors": [
+                    {
+                        "timestamp": session.timestamp.isoformat() if isinstance(session.timestamp, datetime) else session.timestamp,
+                        "source_id": session.source_id,
+                        "error": session.error_message,
+                        "method": session.extraction_method
+                    }
+                    for session in recent_sessions
+                    if not session.success and session.error_message
+                ][-5:]  # Last 5 errors
+            }
+            
+            # Add jurisdiction-specific insights if available
+            if jurisdiction and jurisdiction in self.knowledge_base.jurisdiction_profiles:
+                jurisdiction_profile = self.knowledge_base.jurisdiction_profiles[jurisdiction]
+                insights["jurisdiction_profile"] = {
+                    "total_sources": jurisdiction_profile.total_sources,
+                    "avg_success_rate": jurisdiction_profile.avg_success_rate * 100,
+                    "total_learning_sessions": jurisdiction_profile.total_learning_sessions,
+                    "primary_language": jurisdiction_profile.primary_language
+                }
+            
+            return {
+                "success": True,
+                "insights": insights
+            }
+            
+        except Exception as e:
+            import traceback
+            tb = traceback.format_exc()
+            self.logger.error(f"Error getting learning insights: {e}")
+            self.logger.error(f"Full traceback: {tb}")
+            return {"success": False, "error": str(e), "traceback": tb}
+    
+    async def _smart_extraction_strategy(
+        self,
+        source_ids: List[str],
+        optimize_patterns: bool = True,
+        use_adaptive_selection: bool = True
+    ) -> Dict[str, Any]:
+        """Execute intelligent extraction strategy with pattern optimization and adaptive learning"""
+        try:
+            strategy_start = datetime.utcnow()
+            session_id = f"smart_extraction_{strategy_start.strftime('%Y%m%d_%H%M%S')}"
+            
+            self.logger.info(f"Starting smart extraction strategy: {session_id}")
+            
+            # Get sources to process
+            if self.discovery_agent and hasattr(self.discovery_agent, 'discovered_sources'):
+                available_sources = self.discovery_agent.discovered_sources
+            else:
+                return {"success": False, "error": "No discovery agent available"}
+            
+            sources_to_process = {
+                sid: src for sid, src in available_sources.items() 
+                if sid in source_ids and src.is_active
+            }
+            
+            if not sources_to_process:
+                return {
+                    "success": False,
+                    "error": f"No active sources found from provided IDs: {source_ids}"
+                }
+            
+            strategy_results = {
+                "session_id": session_id,
+                "strategy_start_time": strategy_start.isoformat(),
+                "sources_processed": 0,
+                "total_publications_found": 0,
+                "patterns_optimized": 0,
+                "learning_improvements": [],
+                "extraction_results": {},
+                "performance_metrics": {},
+                "recommendations": []
+            }
+            
+            # Phase 1: Pattern Optimization (if enabled)
+            if optimize_patterns:
+                self.logger.info("Phase 1: Optimizing patterns for better extraction performance")
+                
+                for source_id, source in sources_to_process.items():
+                    try:
+                        optimization_result = await self.page_intelligence_agent.optimize_patterns_for_source(
+                            source_id=source_id,
+                            jurisdiction=source.jurisdiction,
+                            min_sessions=3  # Lower threshold for smart extraction
+                        )
+                        
+                        if optimization_result.get('success'):
+                            strategy_results["patterns_optimized"] += optimization_result.get('patterns_optimized', 0)
+                            strategy_results["learning_improvements"].extend(optimization_result.get('recommendations', []))
+                            
+                            self.logger.info(
+                                f"Optimized patterns for {source_id}: "
+                                f"{optimization_result.get('patterns_optimized', 0)} patterns improved"
+                            )
+                        else:
+                            self.logger.warning(f"Pattern optimization failed for {source_id}: {optimization_result.get('error', 'Unknown')}")
+                    
+                    except Exception as e:
+                        self.logger.error(f"Error optimizing patterns for {source_id}: {e}")
+            
+            # Phase 2: Intelligent Extraction
+            self.logger.info("Phase 2: Executing intelligent extraction with learned patterns")
+            
+            total_publications = 0
+            extraction_errors = []
+            
+            for source_id, source in sources_to_process.items():
+                source_start = datetime.utcnow()
+                
+                try:
+                    # Fetch and analyze the source
+                    feed_url = source.feed_url or source.url
+                    
+                    # Use the enhanced HTML parsing with intelligence
+                    parse_result = await self._parse_feed_content(
+                        feed_url=feed_url,
+                        source_id=source_id,
+                        feed_format=source.feed_format or "html"
+                    )
+                    
+                    if parse_result.get('success'):
+                        source_publications = parse_result.get('items', [])
+                        publications_count = len(source_publications)
+                        total_publications += publications_count
+                        
+                        # Calculate extraction performance metrics
+                        extraction_time = (datetime.utcnow() - source_start).total_seconds()
+                        
+                        strategy_results["extraction_results"][source_id] = {
+                            "success": True,
+                            "publications_found": publications_count,
+                            "extraction_time": extraction_time,
+                            "avg_relevance_score": sum(p.get('relevance_score', 0) for p in source_publications) / publications_count if publications_count > 0 else 0,
+                            "high_relevance_count": sum(1 for p in source_publications if p.get('relevance_score', 0) >= 0.7)
+                        }
+                        
+                        # Performance analysis
+                        if publications_count > 0:
+                            avg_relevance = strategy_results["extraction_results"][source_id]["avg_relevance_score"]
+                            if avg_relevance >= 0.8:
+                                strategy_results["recommendations"].append(
+                                    f"Source {source_id} shows excellent performance (avg relevance: {avg_relevance:.2f})"
+                                )
+                            elif avg_relevance < 0.5:
+                                strategy_results["recommendations"].append(
+                                    f"Source {source_id} may need pattern refinement (avg relevance: {avg_relevance:.2f})"
+                                )
+                        
+                        self.logger.info(
+                            f"Smart extraction for {source_id}: {publications_count} publications, "
+                            f"avg relevance: {strategy_results['extraction_results'][source_id]['avg_relevance_score']:.2f}"
+                        )
+                    
+                    else:
+                        error_msg = parse_result.get('error', 'Unknown error')
+                        extraction_errors.append({"source_id": source_id, "error": error_msg})
+                        
+                        strategy_results["extraction_results"][source_id] = {
+                            "success": False,
+                            "error": error_msg,
+                            "extraction_time": (datetime.utcnow() - source_start).total_seconds()
+                        }
+                
+                except Exception as e:
+                    error_msg = str(e)
+                    extraction_errors.append({"source_id": source_id, "error": error_msg})
+                    
+                    strategy_results["extraction_results"][source_id] = {
+                        "success": False,
+                        "error": error_msg,
+                        "extraction_time": (datetime.utcnow() - source_start).total_seconds()
+                    }
+                    
+                    self.logger.error(f"Error in smart extraction for {source_id}: {e}")
+                
+                strategy_results["sources_processed"] += 1
+            
+            # Phase 3: Performance Analysis and Recommendations
+            strategy_end = datetime.utcnow()
+            total_duration = (strategy_end - strategy_start).total_seconds()
+            
+            successful_extractions = sum(
+                1 for result in strategy_results["extraction_results"].values()
+                if result.get("success", False)
+            )
+            
+            strategy_results.update({
+                "total_publications_found": total_publications,
+                "strategy_duration_seconds": total_duration,
+                "success_rate": successful_extractions / len(sources_to_process) * 100 if sources_to_process else 0,
+                "avg_publications_per_source": total_publications / successful_extractions if successful_extractions > 0 else 0,
+                "extraction_errors": extraction_errors,
+                "strategy_end_time": strategy_end.isoformat()
+            })
+            
+            # Generate strategic recommendations
+            if strategy_results["success_rate"] < 70:
+                strategy_results["recommendations"].append(
+                    "Success rate below 70% - consider reviewing source configurations and patterns"
+                )
+            
+            if strategy_results["avg_publications_per_source"] < 2:
+                strategy_results["recommendations"].append(
+                    "Low publication yield - sources may need more frequent monitoring or pattern optimization"
+                )
+            
+            if strategy_results["patterns_optimized"] > 0:
+                strategy_results["recommendations"].append(
+                    f"Successfully optimized {strategy_results['patterns_optimized']} patterns - extraction performance should improve"
+                )
+            
+            # Phase 4: Generate Learning Insights Report
+            insights_result = await self._get_learning_insights(days_back=1)
+            if insights_result.get('success'):
+                strategy_results["learning_insights"] = insights_result.get('insights', {})
+            
+            self.logger.info(
+                f"Smart extraction strategy completed: {total_publications} publications found, "
+                f"{successful_extractions}/{len(sources_to_process)} sources successful, "
+                f"duration: {total_duration:.1f}s"
+            )
+            
+            return {"success": True, **strategy_results}
+            
+        except Exception as e:
+            self.logger.error(f"Error in smart extraction strategy: {e}")
             return {"success": False, "error": str(e)}
 
     async def get_monitoring_statistics(self) -> Dict[str, Any]:

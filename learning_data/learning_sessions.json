@@ -1,0 +1,254 @@
+[
+  {
+    "session_id": "monitoring_extraction_error_20250901_213808",
+    "timestamp": "2025-09-01T21:38:08.660743",
+    "source_id": "6bb9137d9c8e",
+    "jurisdiction": "France",
+    "extraction_method": "publication_page_intelligence",
+    "patterns_used": [],
+    "success": false,
+    "items_found": 0,
+    "extraction_time": 0.0,
+    "error_message": "'PublicationPageIntelligenceAgent' object has no attribute 'extract_daily_publications'",
+    "new_patterns_discovered": [],
+    "patterns_reinforced": [],
+    "patterns_weakened": [],
+    "notes": [
+      "Exception during intelligent extraction: 'PublicationPageIntelligenceAgent' object has no attribute 'extract_daily_publications'"
+    ]
+  },
+  {
+    "session_id": "monitoring_extraction_error_20250901_213809",
+    "timestamp": "2025-09-01T21:38:09.347749",
+    "source_id": "0945297de767",
+    "jurisdiction": "France",
+    "extraction_method": "publication_page_intelligence",
+    "patterns_used": [],
+    "success": false,
+    "items_found": 0,
+    "extraction_time": 0.0,
+    "error_message": "'PublicationPageIntelligenceAgent' object has no attribute 'extract_daily_publications'",
+    "new_patterns_discovered": [],
+    "patterns_reinforced": [],
+    "patterns_weakened": [],
+    "notes": [
+      "Exception during intelligent extraction: 'PublicationPageIntelligenceAgent' object has no attribute 'extract_daily_publications'"
+    ]
+  },
+  {
+    "session_id": "monitoring_extraction_error_20250901_213810",
+    "timestamp": "2025-09-01T21:38:10.063192",
+    "source_id": "969b46faafb6",
+    "jurisdiction": "France",
+    "extraction_method": "publication_page_intelligence",
+    "patterns_used": [],
+    "success": false,
+    "items_found": 0,
+    "extraction_time": 0.0,
+    "error_message": "'PublicationPageIntelligenceAgent' object has no attribute 'extract_daily_publications'",
+    "new_patterns_discovered": [],
+    "patterns_reinforced": [],
+    "patterns_weakened": [],
+    "notes": [
+      "Exception during intelligent extraction: 'PublicationPageIntelligenceAgent' object has no attribute 'extract_daily_publications'"
+    ]
+  },
+  {
+    "session_id": "monitoring_extraction_error_20250901_213810",
+    "timestamp": "2025-09-01T21:38:10.750521",
+    "source_id": "6a864244605a",
+    "jurisdiction": "France",
+    "extraction_method": "publication_page_intelligence",
+    "patterns_used": [],
+    "success": false,
+    "items_found": 0,
+    "extraction_time": 0.0,
+    "error_message": "'PublicationPageIntelligenceAgent' object has no attribute 'extract_daily_publications'",
+    "new_patterns_discovered": [],
+    "patterns_reinforced": [],
+    "patterns_weakened": [],
+    "notes": [
+      "Exception during intelligent extraction: 'PublicationPageIntelligenceAgent' object has no attribute 'extract_daily_publications'"
+    ]
+  },
+  {
+    "session_id": "monitoring_extraction_error_20250901_213811",
+    "timestamp": "2025-09-01T21:38:11.467424",
+    "source_id": "21e770bdf2a6",
+    "jurisdiction": "France",
+    "extraction_method": "publication_page_intelligence",
+    "patterns_used": [],
+    "success": false,
+    "items_found": 0,
+    "extraction_time": 0.0,
+    "error_message": "'PublicationPageIntelligenceAgent' object has no attribute 'extract_daily_publications'",
+    "new_patterns_discovered": [],
+    "patterns_reinforced": [],
+    "patterns_weakened": [],
+    "notes": [
+      "Exception during intelligent extraction: 'PublicationPageIntelligenceAgent' object has no attribute 'extract_daily_publications'"
+    ]
+  },
+  {
+    "session_id": "intelligence_20250901_214318",
+    "timestamp": "2025-09-01T21:43:18.487026",
+    "source_id": "6bb9137d9c8e",
+    "jurisdiction": "France",
+    "extraction_method": "llm_analysis",
+    "patterns_used": [],
+    "success": false,
+    "items_found": 0,
+    "extraction_time": 9.04133,
+    "error_message": "No publications found",
+    "new_patterns_discovered": [],
+    "patterns_reinforced": [],
+    "patterns_weakened": [],
+    "notes": [
+      "Consider updating patterns or LLM analysis"
+    ]
+  },
+  {
+    "session_id": "intelligence_20250901_214328",
+    "timestamp": "2025-09-01T21:43:28.342676",
+    "source_id": "0945297de767",
+    "jurisdiction": "France",
+    "extraction_method": "llm_analysis",
+    "patterns_used": [],
+    "success": false,
+    "items_found": 0,
+    "extraction_time": 9.763752,
+    "error_message": "No publications found",
+    "new_patterns_discovered": [],
+    "patterns_reinforced": [],
+    "patterns_weakened": [],
+    "notes": [
+      "Consider updating patterns or LLM analysis"
+    ]
+  },
+  {
+    "session_id": "intelligence_20250901_214338",
+    "timestamp": "2025-09-01T21:43:38.791556",
+    "source_id": "969b46faafb6",
+    "jurisdiction": "France",
+    "extraction_method": "llm_analysis",
+    "patterns_used": [],
+    "success": false,
+    "items_found": 0,
+    "extraction_time": 7.035829,
+    "error_message": "No publications found",
+    "new_patterns_discovered": [],
+    "patterns_reinforced": [],
+    "patterns_weakened": [],
+    "notes": [
+      "Consider updating patterns or LLM analysis"
+    ]
+  },
+  {
+    "session_id": "intelligence_20250901_214346",
+    "timestamp": "2025-09-01T21:43:46.635458",
+    "source_id": "6a864244605a",
+    "jurisdiction": "France",
+    "extraction_method": "llm_analysis",
+    "patterns_used": [],
+    "success": false,
+    "items_found": 0,
+    "extraction_time": 8.394735,
+    "error_message": "No publications found",
+    "new_patterns_discovered": [],
+    "patterns_reinforced": [],
+    "patterns_weakened": [],
+    "notes": [
+      "Consider updating patterns or LLM analysis"
+    ]
+  },
+  {
+    "session_id": "intelligence_20250901_214355",
+    "timestamp": "2025-09-01T21:43:55.702517",
+    "source_id": "21e770bdf2a6",
+    "jurisdiction": "France",
+    "extraction_method": "llm_analysis",
+    "patterns_used": [],
+    "success": false,
+    "items_found": 0,
+    "extraction_time": 8.055209,
+    "error_message": "No publications found",
+    "new_patterns_discovered": [],
+    "patterns_reinforced": [],
+    "patterns_weakened": [],
+    "notes": [
+      "Consider updating patterns or LLM analysis"
+    ]
+  },
+  {
+    "session_id": "intelligence_20250901_214437",
+    "timestamp": "2025-09-01T21:44:37.083729",
+    "source_id": "5f5d15c355bf",
+    "jurisdiction": "Spain",
+    "extraction_method": "llm_analysis",
+    "patterns_used": [],
+    "success": false,
+    "items_found": 0,
+    "extraction_time": 3.747016,
+    "error_message": "No publications found",
+    "new_patterns_discovered": [],
+    "patterns_reinforced": [],
+    "patterns_weakened": [],
+    "notes": [
+      "Consider updating patterns or LLM analysis"
+    ]
+  },
+  {
+    "session_id": "intelligence_20250901_214441",
+    "timestamp": "2025-09-01T21:44:41.479172",
+    "source_id": "99db7c28a726",
+    "jurisdiction": "Spain",
+    "extraction_method": "llm_analysis",
+    "patterns_used": [],
+    "success": false,
+    "items_found": 0,
+    "extraction_time": 7.436108,
+    "error_message": "No publications found",
+    "new_patterns_discovered": [],
+    "patterns_reinforced": [],
+    "patterns_weakened": [],
+    "notes": [
+      "Consider updating patterns or LLM analysis"
+    ]
+  },
+  {
+    "session_id": "intelligence_20250901_214504",
+    "timestamp": "2025-09-01T21:45:04.169128",
+    "source_id": "5f5d15c355bf",
+    "jurisdiction": "Spain",
+    "extraction_method": "llm_analysis",
+    "patterns_used": [],
+    "success": false,
+    "items_found": 0,
+    "extraction_time": 4.076364,
+    "error_message": "No publications found",
+    "new_patterns_discovered": [],
+    "patterns_reinforced": [],
+    "patterns_weakened": [],
+    "notes": [
+      "Consider updating patterns or LLM analysis"
+    ]
+  },
+  {
+    "session_id": "intelligence_20250901_214508",
+    "timestamp": "2025-09-01T21:45:08.356162",
+    "source_id": "99db7c28a726",
+    "jurisdiction": "Spain",
+    "extraction_method": "llm_analysis",
+    "patterns_used": [],
+    "success": false,
+    "items_found": 0,
+    "extraction_time": 8.376736,
+    "error_message": "No publications found",
+    "new_patterns_discovered": [],
+    "patterns_reinforced": [],
+    "patterns_weakened": [],
+    "notes": [
+      "Consider updating patterns or LLM analysis"
+    ]
+  }
+]

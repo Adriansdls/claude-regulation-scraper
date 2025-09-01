@@ -69,6 +69,7 @@ class CLIConfig:
             "openai_api_key": os.getenv("OPENAI_API_KEY", ""),
             "firecrawl_api_key": os.getenv("FIRECRAWL_API_KEY", ""),
             "storage_path": str(self.storage_path),
+            "learning_data_path": str(self.storage_path / "learning_data"),
             "default_jurisdictions": ["US", "UK", "EU"],
             "default_agencies": ["FDA", "CPSC", "EPA"],
             "output_format": "table",
@@ -492,7 +493,8 @@ def run_monitoring(ctx, sources, jurisdictions, compliance_only, categories, out
                 monitoring_agent = FeedMonitoringAgent(
                     broker=broker,
                     discovery_agent=discovery_agent,
-                    storage_path=config['storage_path']
+                    storage_path=config['storage_path'],
+                    knowledge_base_path=config.get('learning_data_path', './learning_data')
                 )
                 
                 # Import compliance classifier if needed
@@ -528,10 +530,13 @@ def run_monitoring(ctx, sources, jurisdictions, compliance_only, categories, out
                 
                 progress.update(task, description=f"Monitoring {len(target_sources)} sources...")
                 
-                # Run monitoring  
+                # Run intelligent monitoring with learning
+                progress.update(task, description="Running intelligent feed monitoring...")
                 source_ids = [source.source_id for source in target_sources]
                 result = await monitoring_agent._monitor_publication_feeds(
-                    source_ids=source_ids
+                    source_ids=source_ids,
+                    target_date=datetime.utcnow().isoformat(),
+                    relevance_threshold=0.3
                 )
                 
                 # If compliance-only filtering requested, apply it
@@ -562,6 +567,17 @@ def run_monitoring(ctx, sources, jurisdictions, compliance_only, categories, out
                     _display_monitoring_results(result, output)
                 else:
                     console.print(f"[red]❌ Monitoring failed: {result.get('error', 'Unknown error')}[/red]")
+                    
+                    # Still try to show learning insights even if monitoring failed
+                    try:
+                        insights = await monitoring_agent._get_learning_insights(days_back=1)
+                        if insights.get('success'):
+                            console.print("\n[blue]📊 Recent Learning Activity:[/blue]")
+                            learning_activity = insights.get('insights', {}).get('learning_activity', {})
+                            console.print(f"  • Patterns discovered today: {learning_activity.get('new_patterns_discovered', 0)}")
+                            console.print(f"  • Patterns reinforced today: {learning_activity.get('patterns_reinforced', 0)}")
+                    except:
+                        pass  # Don't fail if insights can't be shown
                     
             except Exception as e:
                 console.print(f"[red]❌ Error during monitoring: {e}[/red]")
@@ -759,6 +775,325 @@ def monitor_results(ctx, since, limit, jurisdiction, compliance_only, min_impact
             console.print(f"[red]❌ Error getting results: {e}[/red]")
     
     asyncio.run(run_results())
+
+@monitor.command('insights')
+@click.option('--jurisdiction', '-j', help='Filter insights by jurisdiction')
+@click.option('--source', '-s', help='Filter insights by source ID')
+@click.option('--days', '-d', default=7, help='Number of days to analyze (default: 7)')
+@click.option('--output', '-o', type=click.Choice(['table', 'json']), default='table', help='Output format')
+@click.pass_context
+def learning_insights(ctx, jurisdiction, source, days, output):
+    """Show learning insights and pattern analysis"""
+    
+    config = ctx.obj['config']
+    
+    async def run_insights():
+        try:
+            broker = MessageBroker()
+            monitoring_agent = FeedMonitoringAgent(
+                broker=broker,
+                discovery_agent=None,
+                storage_path=config['storage_path'],
+                knowledge_base_path=config.get('learning_data_path', './learning_data')
+            )
+            
+            # Get learning insights
+            insights_result = await monitoring_agent._get_learning_insights(
+                jurisdiction=jurisdiction,
+                source_id=source,
+                days_back=days
+            )
+            
+            if not insights_result.get('success'):
+                console.print(f"[red]❌ Error getting insights: {insights_result.get('error', 'Unknown error')}[/red]")
+                if ctx.obj.get('verbose') and insights_result.get('traceback'):
+                    console.print(f"[red]Traceback: {insights_result.get('traceback')}[/red]")
+                return
+            
+            insights = insights_result.get('insights', {})
+            
+            if output == 'json':
+                rprint(json.dumps(insights, indent=2, default=str))
+                return
+            
+            # Display in table format
+            console.print(Panel.fit(
+                f"🧠 Learning Intelligence Report\n" +
+                f"Analysis Period: {insights.get('analysis_period', {}).get('start_date', 'N/A')[:10]} to {insights.get('analysis_period', {}).get('end_date', 'N/A')[:10]}\n" +
+                f"Days Analyzed: {days}" +
+                (f"\nJurisdiction: {jurisdiction}" if jurisdiction else "") +
+                (f"\nSource: {source}" if source else ""),
+                style="bold blue"
+            ))
+            
+            # Session Summary
+            session_summary = insights.get('session_summary', {})
+            if session_summary.get('total_sessions', 0) > 0:
+                summary_table = Table(title="Learning Session Summary")
+                summary_table.add_column("Metric", style="bold")
+                summary_table.add_column("Value")
+                
+                summary_table.add_row("Total Learning Sessions", str(session_summary.get('total_sessions', 0)))
+                summary_table.add_row("Successful Sessions", str(session_summary.get('successful_sessions', 0)))
+                summary_table.add_row("Success Rate", f"{session_summary.get('success_rate', 0):.1f}%")
+                summary_table.add_row("Total Items Extracted", str(session_summary.get('total_items_extracted', 0)))
+                summary_table.add_row("Avg Items/Session", f"{session_summary.get('avg_items_per_successful_session', 0):.1f}")
+                
+                console.print(summary_table)
+            
+            # Learning Activity
+            learning_activity = insights.get('learning_activity', {})
+            if learning_activity:
+                learning_table = Table(title="Learning Activity")
+                learning_table.add_column("Activity", style="bold magenta")
+                learning_table.add_column("Count", justify="center")
+                
+                learning_table.add_row("🌱 New Patterns Discovered", str(learning_activity.get('new_patterns_discovered', 0)))
+                learning_table.add_row("💪 Patterns Reinforced", str(learning_activity.get('patterns_reinforced', 0)))
+                learning_table.add_row("🚀 Learning Velocity/Day", f"{learning_activity.get('learning_velocity', 0):.1f}")
+                
+                console.print(learning_table)
+            
+            # Extraction Methods Performance
+            extraction_methods = insights.get('extraction_methods', {})
+            if extraction_methods:
+                methods_table = Table(title="Extraction Method Performance")
+                methods_table.add_column("Method", style="bold green")
+                methods_table.add_column("Success Rate", justify="center")
+                methods_table.add_column("Avg Items Found", justify="center")
+                methods_table.add_column("Total Uses", justify="center")
+                
+                for method, stats in extraction_methods.items():
+                    methods_table.add_row(
+                        method.replace('_', ' ').title(),
+                        f"{stats.get('success_rate', 0):.1f}%",
+                        f"{stats.get('avg_items_found', 0):.1f}",
+                        str(stats.get('total_uses', 0))
+                    )
+                
+                console.print(methods_table)
+            
+            # Pattern Confidence Distribution
+            pattern_dist = insights.get('pattern_confidence_distribution', {})
+            if pattern_dist:
+                console.print("\n🎆 [bold yellow]Pattern Confidence Distribution:[/bold yellow]")
+                for confidence, count in pattern_dist.items():
+                    console.print(f"  • {confidence.replace('_', ' ').title()}: {count} patterns")
+            
+            # Recent Errors
+            recent_errors = insights.get('recent_errors', [])
+            if recent_errors:
+                console.print("\n⚠️  [bold red]Recent Learning Errors:[/bold red]")
+                for error in recent_errors[-3:]:  # Show last 3 errors
+                    console.print(f"  • {error.get('timestamp', 'N/A')[:16]}: {error.get('error', 'Unknown error')}")
+            
+            # Jurisdiction Profile if available
+            jurisdiction_profile = insights.get('jurisdiction_profile', {})
+            if jurisdiction_profile:
+                profile_table = Table(title=f"Jurisdiction Profile: {jurisdiction}")
+                profile_table.add_column("Attribute", style="bold cyan")
+                profile_table.add_column("Value")
+                
+                profile_table.add_row("Total Sources", str(jurisdiction_profile.get('total_sources', 0)))
+                profile_table.add_row("Avg Success Rate", f"{jurisdiction_profile.get('avg_success_rate', 0):.1f}%")
+                profile_table.add_row("Learning Sessions", str(jurisdiction_profile.get('total_learning_sessions', 0)))
+                if jurisdiction_profile.get('primary_language'):
+                    profile_table.add_row("Primary Language", jurisdiction_profile.get('primary_language'))
+                
+                console.print(profile_table)
+            
+            if session_summary.get('total_sessions', 0) == 0:
+                console.print("\n[yellow]💭 No learning sessions found for the specified criteria[/yellow]")
+                console.print("[dim]Try running monitoring first to generate learning data[/dim]")
+            
+        except Exception as e:
+            console.print(f"[red]❌ Error getting learning insights: {e}[/red]")
+            if ctx.obj.get('verbose'):
+                import traceback
+                console.print(traceback.format_exc())
+    
+    asyncio.run(run_insights())
+
+@monitor.command('smart-extract')
+@click.option('--sources', help='Comma-separated source IDs to process')
+@click.option('--jurisdictions', '-j', help='Process all sources from jurisdictions')
+@click.option('--optimize-patterns', is_flag=True, default=True, help='Optimize patterns before extraction (default: enabled)')
+@click.option('--output', '-o', type=click.Choice(['table', 'json']), default='table', help='Output format')
+@click.pass_context
+def smart_extraction(ctx, sources, jurisdictions, optimize_patterns, output):
+    """Run smart extraction strategy with pattern optimization and adaptive learning"""
+    
+    config = ctx.obj['config']
+    
+    async def run_smart_extraction():
+        try:
+            console.print(Panel.fit(
+                "🤖 Smart Extraction Strategy\n" +
+                "Intelligent extraction using learned patterns and adaptive techniques",
+                style="bold cyan"
+            ))
+            
+            with Progress(
+                SpinnerColumn(),
+                TextColumn("[progress.description]{task.description}"),
+                console=console
+            ) as progress:
+                
+                task = progress.add_task("Initializing smart extraction...", total=None)
+                
+                # Initialize agents
+                broker = MessageBroker()
+                discovery_agent = PublicationDiscoveryAgent(
+                    broker=broker,
+                    storage_path=config['storage_path']
+                )
+                
+                monitoring_agent = FeedMonitoringAgent(
+                    broker=broker,
+                    discovery_agent=discovery_agent,
+                    storage_path=config['storage_path'],
+                    knowledge_base_path=config.get('learning_data_path', './learning_data')
+                )
+                
+                progress.update(task, description="Loading sources...")
+                await discovery_agent._load_discovery_data()
+                
+                # Determine sources to process
+                target_sources = []
+                
+                if sources:
+                    source_ids = [s.strip() for s in sources.split(',')]
+                    for source_id in source_ids:
+                        if source_id in discovery_agent.discovered_sources:
+                            target_sources.append(source_id)
+                elif jurisdictions:
+                    jurisdiction_list = [j.strip() for j in jurisdictions.split(',')]
+                    for source in discovery_agent.discovered_sources.values():
+                        if source.jurisdiction in jurisdiction_list and source.is_active:
+                            target_sources.append(source.source_id)
+                else:
+                    # Process all active sources
+                    target_sources = [
+                        s.source_id for s in discovery_agent.discovered_sources.values() 
+                        if s.is_active
+                    ]
+                
+                if not target_sources:
+                    console.print("[yellow]⚠️  No sources found to process[/yellow]")
+                    console.print("💡 Try running discovery first or check source filters.")
+                    return
+                
+                progress.update(task, description=f"Running smart extraction on {len(target_sources)} sources...")
+                
+                # Execute smart extraction strategy
+                strategy_result = await monitoring_agent._smart_extraction_strategy(
+                    source_ids=target_sources,
+                    optimize_patterns=optimize_patterns,
+                    use_adaptive_selection=True
+                )
+                
+                progress.update(task, description="✅ Smart extraction complete!")
+                
+                if strategy_result.get('success'):
+                    _display_smart_extraction_results(strategy_result, output)
+                else:
+                    console.print(f"[red]❌ Smart extraction failed: {strategy_result.get('error', 'Unknown error')}[/red]")
+        
+        except Exception as e:
+            console.print(f"[red]❌ Error in smart extraction: {e}[/red]")
+            if ctx.obj.get('verbose'):
+                import traceback
+                console.print(traceback.format_exc())
+    
+    asyncio.run(run_smart_extraction())
+
+def _display_smart_extraction_results(result: Dict, output_format: str):
+    """Display smart extraction strategy results"""
+    if output_format == 'json':
+        rprint(json.dumps(result, indent=2, default=str))
+        return
+    
+    console.print(f"\n[bold green]🤖 Smart Extraction Strategy Complete![/bold green]")
+    
+    # Strategy Summary
+    summary_table = Table(title="Strategy Summary")
+    summary_table.add_column("Metric", style="bold cyan")
+    summary_table.add_column("Value", style="white")
+    
+    summary_table.add_row("📊 Sources Processed", str(result.get('sources_processed', 0)))
+    summary_table.add_row("📋 Total Publications Found", str(result.get('total_publications_found', 0)))
+    summary_table.add_row("🔧 Patterns Optimized", str(result.get('patterns_optimized', 0)))
+    summary_table.add_row("✅ Success Rate", f"{result.get('success_rate', 0):.1f}%")
+    summary_table.add_row("📈 Avg Publications/Source", f"{result.get('avg_publications_per_source', 0):.1f}")
+    summary_table.add_row("⏱️ Strategy Duration", f"{result.get('strategy_duration_seconds', 0):.1f}s")
+    
+    console.print(summary_table)
+    
+    # Learning Improvements
+    improvements = result.get('learning_improvements', [])
+    if improvements:
+        console.print("\n🧠 [bold blue]Learning Improvements:[/bold blue]")
+        for improvement in improvements[:5]:  # Show top 5
+            console.print(f"  • {improvement}")
+        if len(improvements) > 5:
+            console.print(f"  [dim]... and {len(improvements) - 5} more improvements[/dim]")
+    
+    # Source-by-Source Results
+    extraction_results = result.get('extraction_results', {})
+    if extraction_results:
+        console.print("\n📊 [bold cyan]Extraction Results by Source:[/bold cyan]")
+        
+        results_table = Table(title="Source Performance")
+        results_table.add_column("Source ID", style="bold")
+        results_table.add_column("Status", justify="center")
+        results_table.add_column("Publications", justify="center")
+        results_table.add_column("Avg Relevance", justify="center")
+        results_table.add_column("Time (s)", justify="center")
+        
+        for source_id, source_result in extraction_results.items():
+            if source_result.get('success'):
+                status = "✅"
+                pubs = str(source_result.get('publications_found', 0))
+                relevance = f"{source_result.get('avg_relevance_score', 0):.2f}"
+            else:
+                status = "❌"
+                pubs = "0"
+                relevance = "N/A"
+            
+            results_table.add_row(
+                source_id,
+                status,
+                pubs,
+                relevance,
+                f"{source_result.get('extraction_time', 0):.1f}"
+            )
+        
+        console.print(results_table)
+    
+    # Strategic Recommendations
+    recommendations = result.get('recommendations', [])
+    if recommendations:
+        console.print("\n💡 [bold yellow]Strategic Recommendations:[/bold yellow]")
+        for rec in recommendations:
+            console.print(f"  • {rec}")
+    
+    # Learning Insights Summary
+    learning_insights = result.get('learning_insights', {})
+    if learning_insights:
+        learning_activity = learning_insights.get('learning_activity', {})
+        if learning_activity.get('new_patterns_discovered', 0) > 0 or learning_activity.get('patterns_reinforced', 0) > 0:
+            console.print("\n🎯 [bold magenta]Learning Activity:[/bold magenta]")
+            console.print(f"  • New patterns discovered: {learning_activity.get('new_patterns_discovered', 0)}")
+            console.print(f"  • Patterns reinforced: {learning_activity.get('patterns_reinforced', 0)}")
+    
+    # Errors if any
+    extraction_errors = result.get('extraction_errors', [])
+    if extraction_errors:
+        console.print("\n⚠️  [bold red]Extraction Errors:[/bold red]")
+        for error in extraction_errors[:3]:  # Show first 3 errors
+            console.print(f"  • {error['source_id']}: {error['error']}")
+        if len(extraction_errors) > 3:
+            console.print(f"  [dim]... and {len(extraction_errors) - 3} more errors[/dim]")
 
 @cli.group()
 @click.pass_context
