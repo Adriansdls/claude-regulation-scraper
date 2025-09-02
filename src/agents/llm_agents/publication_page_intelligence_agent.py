@@ -159,6 +159,22 @@ Always provide structured analysis that can be used to build reliable extraction
                 "required": ["jurisdiction"]
             }
         )
+        
+        self.register_tool(
+            name="extract_from_category_page",
+            function=self._extract_from_category_page,
+            description="Extract individual regulations from a category page (useful for UK drill-down extraction)",
+            parameters={
+                "type": "object",
+                "properties": {
+                    "category_url": {"type": "string", "description": "URL of the category page to extract from"},
+                    "source_id": {"type": "string", "description": "Source ID for learning association"},
+                    "jurisdiction": {"type": "string", "description": "Jurisdiction (e.g., United Kingdom)"},
+                    "category_title": {"type": "string", "description": "Title/name of the category (e.g., 'UK Statutory Instruments')"}
+                },
+                "required": ["category_url", "source_id", "jurisdiction"]
+            }
+        )
     
     async def _analyze_daily_publication_page(
         self,
@@ -494,6 +510,113 @@ Always provide structured analysis that can be used to build reliable extraction
             self.logger.error(f"Error getting pattern recommendations: {e}")
             return {"success": False, "error": str(e)}
     
+    async def _extract_from_category_page(
+        self,
+        category_url: str,
+        source_id: str,
+        jurisdiction: str,
+        category_title: str = "Unknown Category"
+    ) -> Dict[str, Any]:
+        """Extract individual regulations from a category page (useful for UK drill-down extraction)"""
+        
+        session_id = f"category_extraction_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}"
+        session_start = datetime.utcnow()
+        
+        try:
+            self.logger.info(f"Starting category page extraction: {category_url}")
+            
+            # Fetch category page content
+            category_content = await self._fetch_page_content(category_url)
+            if not category_content:
+                return {"success": False, "error": "Could not fetch category page content"}
+            
+            # Use LLM to extract individual regulations from the category page
+            category_analysis = await self._analyze_category_page_with_llm(
+                category_url, category_content, source_id, jurisdiction, category_title
+            )
+            
+            if category_analysis.get('success'):
+                publications = category_analysis.get('publications', [])
+                extraction_time = (datetime.utcnow() - session_start).total_seconds()
+                
+                # Record learning session
+                learning_session = LearningSession(
+                    session_id=session_id,
+                    timestamp=session_start,
+                    source_id=source_id,
+                    jurisdiction=jurisdiction,
+                    extraction_method="category_drill_down",
+                    patterns_used=[],
+                    success=len(publications) > 0,
+                    items_found=len(publications),
+                    extraction_time=extraction_time,
+                    notes=[f"Successfully extracted {len(publications)} publications from category page: {category_title}"]
+                )
+                
+                if len(publications) == 0:
+                    learning_session.error_message = "No publications found on category page"
+                    learning_session.notes.append("Category page may be empty or require different extraction approach")
+                
+                self.knowledge_base.record_learning_session(learning_session)
+                
+                return {
+                    "success": True,
+                    "category_url": category_url,
+                    "category_title": category_title,
+                    "publications": [pub.to_dict() for pub in publications],
+                    "extraction_method": "category_drill_down",
+                    "items_found": len(publications),
+                    "extraction_time": extraction_time,
+                    "session_id": session_id
+                }
+            else:
+                # Record failed learning session
+                extraction_time = (datetime.utcnow() - session_start).total_seconds()
+                error_msg = category_analysis.get('error', 'Unknown error')
+                
+                failed_session = LearningSession(
+                    session_id=session_id,
+                    timestamp=session_start,
+                    source_id=source_id,
+                    jurisdiction=jurisdiction,
+                    extraction_method="category_drill_down",
+                    success=False,
+                    extraction_time=extraction_time,
+                    error_message=error_msg,
+                    notes=[f"Failed to extract from category page: {category_title}"]
+                )
+                self.knowledge_base.record_learning_session(failed_session)
+                
+                return {
+                    "success": False,
+                    "error": error_msg,
+                    "category_url": category_url,
+                    "extraction_time": extraction_time
+                }
+            
+        except Exception as e:
+            extraction_time = (datetime.utcnow() - session_start).total_seconds()
+            self.logger.error(f"Error in category page extraction: {e}")
+            
+            # Record exception in learning session
+            try:
+                failed_session = LearningSession(
+                    session_id=session_id,
+                    timestamp=session_start,
+                    source_id=source_id,
+                    jurisdiction=jurisdiction,
+                    extraction_method="category_drill_down",
+                    success=False,
+                    extraction_time=extraction_time,
+                    error_message=str(e),
+                    notes=[f"Exception during category extraction: {str(e)}"]
+                )
+                self.knowledge_base.record_learning_session(failed_session)
+            except:
+                pass  # Don't fail if learning session recording fails
+            
+            return {"success": False, "error": str(e)}
+    
     async def _fetch_page_content(self, url: str) -> Optional[str]:
         """Fetch page content with proper headers"""
         try:
@@ -515,6 +638,69 @@ Always provide structured analysis that can be used to build reliable extraction
                 
         except Exception as e:
             self.logger.error(f"Error fetching {url}: {e}")
+            return None
+    
+    async def _fetch_page_content_with_timeout(self, url: str, timeout: float = 15.0) -> Optional[str]:
+        """Fetch page content with enhanced timeout and error handling"""
+        try:
+            headers = {
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+                'Accept-Language': 'en-US,en;q=0.5',
+                'Accept-Encoding': 'gzip, deflate',
+                'Connection': 'keep-alive',
+                'Upgrade-Insecure-Requests': '1',
+                'Cache-Control': 'no-cache'
+            }
+            
+            # Use asyncio timeout for better control
+            try:
+                response = await asyncio.wait_for(
+                    asyncio.get_event_loop().run_in_executor(
+                        None, 
+                        lambda: requests.get(url, headers=headers, timeout=timeout, allow_redirects=True)
+                    ),
+                    timeout=timeout + 5.0  # Give a bit more time for the asyncio wrapper
+                )
+                
+                if response.status_code == 200:
+                    content = response.text
+                    # Basic content validation
+                    if len(content) < 100:
+                        self.logger.warning(f"Retrieved very short content from {url} ({len(content)} chars)")
+                    return content
+                    
+                elif response.status_code in [301, 302, 303, 307, 308]:
+                    # Handle redirects explicitly if needed
+                    redirect_url = response.headers.get('Location', '')
+                    self.logger.info(f"Page redirected: {url} -> {redirect_url}")
+                    return response.text if response.text else None
+                    
+                else:
+                    self.logger.warning(f"HTTP {response.status_code} for {url}")
+                    # For some error codes, still try to return content (like 404 pages that might have useful error info)
+                    if response.status_code in [404, 403] and response.text:
+                        return response.text
+                    return None
+                    
+            except asyncio.TimeoutError:
+                self.logger.error(f"Timeout ({timeout}s) fetching {url}")
+                return None
+                
+        except requests.exceptions.RequestException as e:
+            # Handle specific request errors
+            if isinstance(e, requests.exceptions.Timeout):
+                self.logger.error(f"Request timeout for {url}: {e}")
+            elif isinstance(e, requests.exceptions.ConnectionError):
+                self.logger.error(f"Connection error for {url}: {e}")
+            elif isinstance(e, requests.exceptions.HTTPError):
+                self.logger.error(f"HTTP error for {url}: {e}")
+            else:
+                self.logger.error(f"Request error for {url}: {e}")
+            return None
+            
+        except Exception as e:
+            self.logger.error(f"Unexpected error fetching {url}: {e}")
             return None
     
     async def _try_learned_patterns(
@@ -618,6 +804,7 @@ Your task:
 2. Extract publication items (title, link, date if available)
 3. Identify CSS selectors that could be reused for future extraction
 4. Focus on NEW publications, not archives
+5. **IMPORTANT FOR UK**: If you find category pages (like "3 UK Statutory Instruments" or "Scottish Statutory Instrument"), follow those links to extract individual regulations
 
 Return JSON:
 {{
@@ -628,6 +815,14 @@ Return JSON:
             "published_date": "date if found",
             "content_snippet": "brief description",
             "confidence": 0.0-1.0
+        }}
+    ],
+    "category_pages_found": [
+        {{
+            "title": "category title (e.g. 'UK Statutory Instruments')",
+            "url": "full URL to category page",
+            "publication_count": "number if mentioned (e.g. '3 UK Statutory Instruments')",
+            "needs_drill_down": true
         }}
     ],
     "extraction_patterns": [
@@ -646,7 +841,7 @@ Return JSON:
     }}
 }}
 
-IMPORTANT: Only extract items that appear to be from today or very recent. Ignore archive sections."""
+IMPORTANT: Only extract items that appear to be from today or very recent. Ignore archive sections. For UK legislation.gov.uk, look for category links that lead to individual regulations."""
             
             response = await self.generate_response(analysis_prompt, use_tools=False)
             
@@ -692,6 +887,24 @@ IMPORTANT: Only extract items that appear to be from today or very recent. Ignor
                 
                 publications.append(pub)
             
+            # Check for category pages that need drill-down extraction
+            category_pages = analysis_data.get('category_pages_found', [])
+            if category_pages and jurisdiction.lower() in ['uk', 'united kingdom', 'britain']:
+                self.logger.info(f"Found {len(category_pages)} category pages for drill-down extraction")
+                
+                # Drill down into category pages to extract individual regulations
+                drill_down_publications = await self._drill_down_category_pages(
+                    category_pages, page_url, source_id, jurisdiction
+                )
+                
+                # Add drill-down publications to the main list
+                publications.extend(drill_down_publications)
+                
+                # Update analysis data to reflect drill-down results
+                analysis_data['drill_down_performed'] = True
+                analysis_data['drill_down_pages'] = len(category_pages)
+                analysis_data['drill_down_publications'] = len(drill_down_publications)
+            
             return {
                 "success": True,
                 "publications": publications,
@@ -704,6 +917,373 @@ IMPORTANT: Only extract items that appear to be from today or very recent. Ignor
             return {"success": False, "error": f"JSON parsing error: {e}"}
         except Exception as e:
             self.logger.error(f"Error in LLM analysis: {e}")
+            return {"success": False, "error": str(e)}
+    
+    async def _drill_down_category_pages(
+        self,
+        category_pages: List[Dict],
+        base_url: str,
+        source_id: str,
+        jurisdiction: str
+    ) -> List[PublicationItem]:
+        """Drill down into category pages to extract individual regulations with enhanced error handling"""
+        
+        drill_down_publications = []
+        successful_extractions = 0
+        failed_extractions = 0
+        
+        try:
+            from urllib.parse import urljoin
+            
+            # Limit maximum category pages to process (prevent runaway processing)
+            max_categories = 10
+            categories_to_process = category_pages[:max_categories]
+            
+            if len(category_pages) > max_categories:
+                self.logger.info(f"Limiting drill-down to first {max_categories} of {len(category_pages)} category pages")
+            
+            for i, category_page in enumerate(categories_to_process, 1):
+                if not category_page.get('needs_drill_down', False):
+                    self.logger.debug(f"Skipping category page {i}: does not need drill-down")
+                    continue
+                
+                category_url = category_page.get('url', '')
+                category_title = category_page.get('title', 'Unknown Category')
+                publication_count = category_page.get('publication_count', 'unknown')
+                
+                # Enhanced URL validation
+                if not category_url or category_url.strip() == '':
+                    self.logger.warning(f"Category page {i} '{category_title}': No valid URL provided")
+                    failed_extractions += 1
+                    continue
+                
+                # Make URL absolute with better error handling
+                try:
+                    if not category_url.startswith('http'):
+                        category_url = urljoin(base_url, category_url)
+                        
+                    # Basic URL validation
+                    from urllib.parse import urlparse
+                    parsed = urlparse(category_url)
+                    if not parsed.netloc:
+                        raise ValueError(f"Invalid URL structure: {category_url}")
+                        
+                except Exception as e:
+                    self.logger.error(f"Category page {i} '{category_title}': URL validation failed - {e}")
+                    failed_extractions += 1
+                    continue
+                
+                self.logger.info(f"Drilling down into category page {i}/{len(categories_to_process)}: {category_title} ({publication_count}) -> {category_url}")
+                
+                try:
+                    # Enhanced content fetching with timeout tracking
+                    fetch_start = asyncio.get_event_loop().time()
+                    category_content = await self._fetch_page_content_with_timeout(category_url, timeout=15.0)
+                    fetch_time = asyncio.get_event_loop().time() - fetch_start
+                    
+                    if not category_content:
+                        self.logger.warning(f"Category page {i} '{category_title}': Could not fetch content (took {fetch_time:.1f}s)")
+                        failed_extractions += 1
+                        continue
+                    
+                    # Content quality check
+                    if len(category_content.strip()) < 500:
+                        self.logger.warning(f"Category page {i} '{category_title}': Content too short ({len(category_content)} chars) - may be error page")
+                        
+                    self.logger.debug(f"Category page {i} '{category_title}': Fetched {len(category_content)} chars in {fetch_time:.1f}s")
+                    
+                    # Enhanced LLM analysis with retry logic
+                    max_retries = 2
+                    category_analysis = None
+                    
+                    for retry in range(max_retries + 1):
+                        try:
+                            analysis_start = asyncio.get_event_loop().time()
+                            category_analysis = await self._analyze_category_page_with_llm(
+                                category_url, category_content, source_id, jurisdiction, category_title
+                            )
+                            analysis_time = asyncio.get_event_loop().time() - analysis_start
+                            
+                            self.logger.debug(f"Category page {i} '{category_title}': LLM analysis completed in {analysis_time:.1f}s")
+                            break
+                            
+                        except Exception as llm_error:
+                            if retry < max_retries:
+                                self.logger.warning(f"Category page {i} '{category_title}': LLM analysis retry {retry + 1}/{max_retries} after error: {llm_error}")
+                                await asyncio.sleep(2.0 * (retry + 1))  # Exponential backoff
+                                continue
+                            else:
+                                raise llm_error
+                    
+                    # Process analysis results
+                    if category_analysis and category_analysis.get('success'):
+                        category_publications = category_analysis.get('publications', [])
+                        
+                        # Validate extracted publications
+                        valid_publications = []
+                        for pub in category_publications:
+                            if hasattr(pub, 'title') and hasattr(pub, 'url') and pub.title and pub.url:
+                                valid_publications.append(pub)
+                            else:
+                                self.logger.debug(f"Category page {i} '{category_title}': Skipping invalid publication: {pub}")
+                        
+                        drill_down_publications.extend(valid_publications)
+                        successful_extractions += 1
+                        
+                        self.logger.info(f"Category page {i} '{category_title}': Successfully extracted {len(valid_publications)} individual regulations")
+                        
+                        # Enhanced success logging
+                        if len(valid_publications) > 0:
+                            sample_title = valid_publications[0].title[:80] + "..." if len(valid_publications[0].title) > 80 else valid_publications[0].title
+                            self.logger.debug(f"Category page {i} sample: {sample_title}")
+                            
+                    else:
+                        error_msg = category_analysis.get('error', 'Unknown error') if category_analysis else 'Analysis returned None'
+                        self.logger.warning(f"Category page {i} '{category_title}': Extraction failed - {error_msg}")
+                        failed_extractions += 1
+                    
+                    # Rate limiting with adaptive delays
+                    if i < len(categories_to_process):
+                        delay = 1.0 if successful_extractions > failed_extractions else 2.0
+                        await asyncio.sleep(delay)
+                    
+                except asyncio.TimeoutError:
+                    self.logger.error(f"Category page {i} '{category_title}': Timeout during processing")
+                    failed_extractions += 1
+                    continue
+                except Exception as e:
+                    self.logger.error(f"Category page {i} '{category_title}': Processing error - {e}")
+                    failed_extractions += 1
+                    continue
+            
+            # Enhanced completion logging
+            total_processed = successful_extractions + failed_extractions
+            success_rate = (successful_extractions / total_processed * 100) if total_processed > 0 else 0
+            
+            self.logger.info(f"Drill-down extraction completed: {len(drill_down_publications)} total publications from {successful_extractions}/{total_processed} category pages (success rate: {success_rate:.1f}%)")
+            
+            if failed_extractions > 0:
+                self.logger.warning(f"Drill-down extraction had {failed_extractions} failed category pages - consider reviewing error handling")
+            
+            return drill_down_publications
+            
+        except Exception as e:
+            self.logger.error(f"Critical error in drill-down extraction: {e}")
+            # Return any publications we managed to extract before the error
+            return drill_down_publications
+    
+    def _attempt_json_fix(self, json_text: str) -> Optional[str]:
+        """Attempt to fix common JSON issues in LLM responses"""
+        try:
+            # Common fixes for malformed JSON
+            fixes = [
+                # Fix trailing commas
+                lambda text: re.sub(r',\s*}', '}', text),
+                lambda text: re.sub(r',\s*]', ']', text),
+                
+                # Fix missing quotes on keys
+                lambda text: re.sub(r'(\w+):', r'"\1":', text),
+                
+                # Fix single quotes
+                lambda text: text.replace("'", '"'),
+                
+                # Fix escaped quotes issues
+                lambda text: re.sub(r'\\"+', '"', text),
+                
+                # Fix boolean values
+                lambda text: text.replace('True', 'true').replace('False', 'false').replace('None', 'null'),
+            ]
+            
+            current_text = json_text
+            
+            for fix_func in fixes:
+                try:
+                    fixed_text = fix_func(current_text)
+                    # Test if the fix worked
+                    json.loads(fixed_text)
+                    return fixed_text
+                except:
+                    current_text = fixed_text
+                    continue
+                    
+            return None
+            
+        except Exception as e:
+            self.logger.debug(f"JSON fix attempt failed: {e}")
+            return None
+    
+    async def _analyze_category_page_with_llm(
+        self,
+        category_url: str,
+        category_content: str,
+        source_id: str,
+        jurisdiction: str,
+        category_title: str
+    ) -> Dict[str, Any]:
+        """Use LLM to analyze a category page and extract individual regulation links"""
+        
+        try:
+            # Truncate content for LLM analysis
+            content_sample = category_content[:15000] if len(category_content) > 15000 else category_content
+            
+            analysis_prompt = f"""Analyze this {jurisdiction} category page to extract individual regulation links.
+
+CATEGORY PAGE URL: {category_url}
+CATEGORY TITLE: {category_title}
+JURISDICTION: {jurisdiction}
+SOURCE ID: {source_id}
+
+HTML CONTENT:
+{content_sample}
+
+Your task:
+1. Extract individual regulation links from this category page
+2. Look for patterns like "SI 2025/123 - Title" or "Statutory Instrument 2025/123"
+3. Each regulation should have its own URL and title
+4. Focus on TODAY's regulations (ignore historical ones unless clearly current)
+
+Return JSON:
+{{
+    "publications_found": [
+        {{
+            "title": "SI 2025/123 - Full regulation title",
+            "url": "full URL to individual regulation", 
+            "published_date": "date if found",
+            "content_snippet": "brief description or regulation number",
+            "confidence": 0.0-1.0,
+            "regulation_number": "SI 2025/123 if identifiable"
+        }}
+    ],
+    "extraction_patterns": [
+        {{
+            "type": "css_selector",
+            "pattern": "h6 a[href*='/uksi/']",
+            "description": "Links to individual UK statutory instruments",
+            "confidence": 0.0-1.0
+        }}
+    ],
+    "page_analysis": {{
+        "regulation_count": "number of regulations found",
+        "date_format": "format used for dates",
+        "regulation_types": ["SI", "SSI", "etc."],
+        "page_structure": "how individual regulations are organized on this page"
+    }}
+}}
+
+IMPORTANT: Extract INDIVIDUAL regulation links, not category or summary pages. Look for regulation numbers and specific titles."""
+            
+            # Enhanced LLM response generation with error handling
+            try:
+                response = await self.generate_response(analysis_prompt, use_tools=False)
+            except Exception as llm_error:
+                return {"success": False, "error": f"Category LLM generation failed: {llm_error}"}
+            
+            if not response:
+                return {"success": False, "error": "No response from category LLM analysis"}
+            
+            if not response.get('content'):
+                return {"success": False, "error": "Empty content in category LLM response"}
+            
+            # Parse LLM response with enhanced error handling
+            content = response['content'].strip()
+            
+            if not content:
+                return {"success": False, "error": "Empty content after stripping"}
+            
+            # Enhanced JSON extraction and parsing
+            original_content = content
+            try:
+                # Handle markdown code blocks
+                if content.startswith('```json'):
+                    lines = content.split('\n')
+                    if len(lines) >= 3:
+                        content = '\n'.join(lines[1:-1]).strip()
+                elif content.startswith('```'):
+                    lines = content.split('\n') 
+                    if len(lines) >= 3:
+                        content = '\n'.join(lines[1:-1]).strip()
+                
+                # Extract JSON with multiple patterns
+                json_match = re.search(r'\{.*\}', content, re.DOTALL)
+                if not json_match:
+                    # Try alternative patterns
+                    json_match = re.search(r'(\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\})', content, re.DOTALL)
+                
+                if not json_match:
+                    return {
+                        "success": False, 
+                        "error": f"Could not find JSON in category LLM response. Content preview: {original_content[:300]}..."
+                    }
+                
+                # Parse JSON with error recovery
+                try:
+                    analysis_data = json.loads(json_match.group())
+                except json.JSONDecodeError as json_error:
+                    # Try to fix common JSON issues
+                    json_text = json_match.group()
+                    fixed_json = self._attempt_json_fix(json_text)
+                    if fixed_json:
+                        try:
+                            analysis_data = json.loads(fixed_json)
+                            self.logger.info("Successfully recovered from category JSON parsing error")
+                        except json.JSONDecodeError:
+                            return {
+                                "success": False, 
+                                "error": f"Category JSON parsing failed: {json_error}. Content: {json_text[:200]}..."
+                            }
+                    else:
+                        return {
+                            "success": False, 
+                            "error": f"Category JSON parsing failed: {json_error}. Content: {json_text[:200]}..."
+                        }
+                        
+            except Exception as parse_error:
+                return {"success": False, "error": f"Category content parsing error: {parse_error}"}
+            
+            # Convert to PublicationItem objects
+            publications = []
+            for pub_data in analysis_data.get('publications_found', []):
+                # Make URL absolute
+                pub_url = pub_data.get('url', '')
+                if pub_url and not pub_url.startswith('http'):
+                    from urllib.parse import urljoin
+                    pub_url = urljoin(category_url, pub_url)
+                
+                if pub_data.get('title') and pub_url:
+                    pub = PublicationItem(
+                        title=pub_data.get('title', ''),
+                        url=pub_url,
+                        content_snippet=pub_data.get('content_snippet', '') or pub_data.get('regulation_number', ''),
+                        confidence_score=pub_data.get('confidence', 0.8),  # Higher confidence for drill-down
+                        source_id=source_id,
+                        extraction_method="llm_drill_down"
+                    )
+                    
+                    # Parse date if provided
+                    if pub_data.get('published_date'):
+                        try:
+                            pub.published_date = datetime.fromisoformat(pub_data['published_date'])
+                        except:
+                            # Try to extract date from today if no specific date
+                            pub.published_date = datetime.utcnow()
+                    else:
+                        # Default to today for new regulations
+                        pub.published_date = datetime.utcnow()
+                    
+                    publications.append(pub)
+            
+            return {
+                "success": True,
+                "publications": publications,
+                "analysis_data": analysis_data,
+                "method": "llm_category_drill_down"
+            }
+            
+        except json.JSONDecodeError as e:
+            self.logger.error(f"Failed to parse category page LLM JSON response: {e}")
+            return {"success": False, "error": f"JSON parsing error: {e}"}
+        except Exception as e:
+            self.logger.error(f"Error in category page LLM analysis: {e}")
             return {"success": False, "error": str(e)}
     
     async def _learn_from_llm_success(

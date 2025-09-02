@@ -1,0 +1,76 @@
+{
+  "United Kingdom": {
+    "jurisdiction_name": "United Kingdom",
+    "jurisdiction_code": "United Kingdom",
+    "source_profiles": {
+      "bb27349b0d92": {
+        "source_id": "bb27349b0d92",
+        "source_name": "",
+        "base_url": "https://www.legislation.gov.uk/new",
+        "jurisdiction": "United Kingdom",
+        "extraction_patterns": {
+          "1dce3e3210d9": {
+            "pattern_id": "1dce3e3210d9",
+            "pattern_type": "css_selector",
+            "pattern_value": ".noPublish",
+            "description": "Indicates no publications available for a category",
+            "success_count": 2,
+            "failure_count": 0,
+            "confidence_score": 1.0,
+            "last_used": "2025-09-02T07:50:37.477743",
+            "last_successful": "2025-09-02T07:50:37.477744",
+            "applies_to": [
+              "https://www.legislation.gov.uk/new"
+            ],
+            "created_date": "2025-09-02T07:48:10.313280",
+            "avg_extraction_time": 0.0,
+            "avg_items_found": 1.5
+          },
+          "036c872b10f6": {
+            "pattern_id": "036c872b10f6",
+            "pattern_type": "css_selector",
+            "pattern_value": "table tbody tr",
+            "description": "Rows in the publication table for categories",
+            "success_count": 2,
+            "failure_count": 0,
+            "confidence_score": 1.0,
+            "last_used": "2025-09-02T07:50:37.477757",
+            "last_successful": "2025-09-02T07:50:37.477757",
+            "applies_to": [
+              "https://www.legislation.gov.uk/new"
+            ],
+            "created_date": "2025-09-02T07:48:10.313614",
+            "avg_extraction_time": 0.0,
+            "avg_items_found": 1.5
+          }
+        },
+        "daily_publication_paths": [],
+        "date_formats": [],
+        "content_indicators": [],
+        "typical_update_times": [],
+        "last_update_detected": null,
+        "overall_success_rate": 0.5,
+        "avg_items_per_session": 1.5,
+        "avg_extraction_time": 11.217138,
+        "first_learned": "2025-09-02T07:47:48.196190",
+        "last_updated": "2025-09-02T07:50:37.477761",
+        "learning_sessions": 2
+      }
+    },
+    "common_date_formats": [
+      "YYYY-MM-DD"
+    ],
+    "common_content_patterns": [
+      "Nothing published",
+      "Wales Statutory Instrument"
+    ],
+    "common_page_structures": [],
+    "primary_language": "",
+    "locale_info": {},
+    "total_sources": 1,
+    "avg_success_rate": 0.5,
+    "total_learning_sessions": 0,
+    "first_discovered": "2025-09-02T07:47:48.191920",
+    "last_updated": "2025-09-02T07:47:48.196219"
+  }
+}

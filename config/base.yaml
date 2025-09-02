@@ -241,4 +241,4 @@ custom:
     respect_robots_txt: true
     default_crawl_delay: 1.0
     max_pages_per_domain: 1000
-    user_agent_contact: "admin@company.com"
+    user_agent_contact: null  # Set via CONTACT_EMAIL environment variable

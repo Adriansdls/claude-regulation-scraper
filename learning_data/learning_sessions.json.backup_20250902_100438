@@ -1,0 +1,70 @@
+[
+  {
+    "session_id": "intelligence_20250902_080225",
+    "timestamp": "2025-09-02T08:02:25.883887",
+    "source_id": "bb27349b0d92",
+    "jurisdiction": "United Kingdom",
+    "extraction_method": "llm_analysis",
+    "patterns_used": [],
+    "success": true,
+    "items_found": 2,
+    "extraction_time": 25.848681,
+    "error_message": null,
+    "new_patterns_discovered": [],
+    "patterns_reinforced": [],
+    "patterns_weakened": [],
+    "notes": []
+  },
+  {
+    "session_id": "monitoring_extraction_20250902_080225",
+    "timestamp": "2025-09-02T08:02:51.735515",
+    "source_id": "bb27349b0d92",
+    "jurisdiction": "United Kingdom",
+    "extraction_method": "publication_page_intelligence",
+    "patterns_used": [],
+    "success": true,
+    "items_found": 2,
+    "extraction_time": 0.0,
+    "error_message": null,
+    "new_patterns_discovered": [],
+    "patterns_reinforced": [],
+    "patterns_weakened": [],
+    "notes": [
+      "Successfully extracted 2 publications using intelligent page analysis"
+    ]
+  },
+  {
+    "session_id": "intelligence_20250902_080253",
+    "timestamp": "2025-09-02T08:02:53.290858",
+    "source_id": "b42538982335",
+    "jurisdiction": "United Kingdom",
+    "extraction_method": "llm_analysis",
+    "patterns_used": [],
+    "success": true,
+    "items_found": 1,
+    "extraction_time": 18.701917,
+    "error_message": null,
+    "new_patterns_discovered": [],
+    "patterns_reinforced": [],
+    "patterns_weakened": [],
+    "notes": []
+  },
+  {
+    "session_id": "monitoring_extraction_20250902_080253",
+    "timestamp": "2025-09-02T08:03:11.997251",
+    "source_id": "b42538982335",
+    "jurisdiction": "United Kingdom",
+    "extraction_method": "publication_page_intelligence",
+    "patterns_used": [],
+    "success": true,
+    "items_found": 1,
+    "extraction_time": 0.0,
+    "error_message": null,
+    "new_patterns_discovered": [],
+    "patterns_reinforced": [],
+    "patterns_weakened": [],
+    "notes": [
+      "Successfully extracted 1 publications using intelligent page analysis"
+    ]
+  }
+]

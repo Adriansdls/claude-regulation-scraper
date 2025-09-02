@@ -1,0 +1,149 @@
+{
+  "United Kingdom": {
+    "jurisdiction_name": "United Kingdom",
+    "jurisdiction_code": "United Kingdom",
+    "source_profiles": {
+      "bb27349b0d92": {
+        "source_id": "bb27349b0d92",
+        "source_name": "",
+        "base_url": "https://www.legislation.gov.uk/new",
+        "jurisdiction": "United Kingdom",
+        "extraction_patterns": {
+          "1dce3e3210d9": {
+            "pattern_id": "1dce3e3210d9",
+            "pattern_type": "css_selector",
+            "pattern_value": ".noPublish",
+            "description": "Indicates no publications available for a category",
+            "success_count": 1,
+            "failure_count": 0,
+            "confidence_score": 1.0,
+            "last_used": "2025-09-02T08:02:51.730164",
+            "last_successful": "2025-09-02T08:02:51.730164",
+            "applies_to": [
+              "https://www.legislation.gov.uk/new"
+            ],
+            "created_date": "2025-09-02T08:02:51.730147",
+            "avg_extraction_time": 0.0,
+            "avg_items_found": 2.0
+          },
+          "2f2fc78fef43": {
+            "pattern_id": "2f2fc78fef43",
+            "pattern_type": "css_selector",
+            "pattern_value": "table.summary thead tr th",
+            "description": "Table headers for publication types",
+            "success_count": 1,
+            "failure_count": 0,
+            "confidence_score": 1.0,
+            "last_used": "2025-09-02T08:02:51.730190",
+            "last_successful": "2025-09-02T08:02:51.730191",
+            "applies_to": [
+              "https://www.legislation.gov.uk/new"
+            ],
+            "created_date": "2025-09-02T08:02:51.730188",
+            "avg_extraction_time": 0.0,
+            "avg_items_found": 2.0
+          },
+          "c5ecaeb61303": {
+            "pattern_id": "c5ecaeb61303",
+            "pattern_type": "css_selector",
+            "pattern_value": "h4.accessibleText",
+            "description": "Headings for each category of publications",
+            "success_count": 1,
+            "failure_count": 0,
+            "confidence_score": 1.0,
+            "last_used": "2025-09-02T08:02:51.730201",
+            "last_successful": "2025-09-02T08:02:51.730201",
+            "applies_to": [
+              "https://www.legislation.gov.uk/new"
+            ],
+            "created_date": "2025-09-02T08:02:51.730200",
+            "avg_extraction_time": 0.0,
+            "avg_items_found": 2.0
+          }
+        },
+        "daily_publication_paths": [],
+        "date_formats": [],
+        "content_indicators": [],
+        "typical_update_times": [],
+        "last_update_detected": null,
+        "overall_success_rate": 0.5,
+        "avg_items_per_session": 2.0,
+        "avg_extraction_time": 25.846317,
+        "first_learned": "2025-09-02T08:02:26.177143",
+        "last_updated": "2025-09-02T08:02:51.730212",
+        "learning_sessions": 1
+      },
+      "b42538982335": {
+        "source_id": "b42538982335",
+        "source_name": "",
+        "base_url": "https://www.thegazette.co.uk/all-notices",
+        "jurisdiction": "United Kingdom",
+        "extraction_patterns": {
+          "15add215df67": {
+            "pattern_id": "15add215df67",
+            "pattern_type": "css_selector",
+            "pattern_value": ".publication-item a",
+            "description": "Links to daily publications",
+            "success_count": 1,
+            "failure_count": 0,
+            "confidence_score": 1.0,
+            "last_used": "2025-09-02T08:03:11.984809",
+            "last_successful": "2025-09-02T08:03:11.984811",
+            "applies_to": [
+              "https://www.thegazette.co.uk/all-notices"
+            ],
+            "created_date": "2025-09-02T08:03:11.984736",
+            "avg_extraction_time": 0.0,
+            "avg_items_found": 1.0
+          },
+          "fcf1888d4062": {
+            "pattern_id": "fcf1888d4062",
+            "pattern_type": "css_selector",
+            "pattern_value": ".publication-date",
+            "description": "Dates associated with each publication",
+            "success_count": 1,
+            "failure_count": 0,
+            "confidence_score": 1.0,
+            "last_used": "2025-09-02T08:03:11.984883",
+            "last_successful": "2025-09-02T08:03:11.984884",
+            "applies_to": [
+              "https://www.thegazette.co.uk/all-notices"
+            ],
+            "created_date": "2025-09-02T08:03:11.984880",
+            "avg_extraction_time": 0.0,
+            "avg_items_found": 1.0
+          }
+        },
+        "daily_publication_paths": [],
+        "date_formats": [],
+        "content_indicators": [],
+        "typical_update_times": [],
+        "last_update_detected": null,
+        "overall_success_rate": 0.5,
+        "avg_items_per_session": 1.0,
+        "avg_extraction_time": 18.694032,
+        "first_learned": "2025-09-02T08:02:53.490862",
+        "last_updated": "2025-09-02T08:03:11.984933",
+        "learning_sessions": 1
+      }
+    },
+    "common_date_formats": [
+      "YYYY-MM-DD"
+    ],
+    "common_content_patterns": [
+      "Nothing published",
+      "publishedNum",
+      "new publication",
+      "recent notice",
+      "today's publication"
+    ],
+    "common_page_structures": [],
+    "primary_language": "",
+    "locale_info": {},
+    "total_sources": 2,
+    "avg_success_rate": 0.5,
+    "total_learning_sessions": 0,
+    "first_discovered": "2025-09-02T08:02:26.175956",
+    "last_updated": "2025-09-02T08:02:53.490879"
+  }
+}

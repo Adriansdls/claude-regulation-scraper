@@ -1,110 +1,4 @@
 {
-  "France": {
-    "jurisdiction_name": "France",
-    "jurisdiction_code": "France",
-    "source_profiles": {
-      "6bb9137d9c8e": {
-        "source_id": "6bb9137d9c8e",
-        "source_name": "",
-        "base_url": "https://www.journal-officiel.gouv.fr/pages/journal-officiel/",
-        "jurisdiction": "France",
-        "extraction_patterns": {},
-        "daily_publication_paths": [],
-        "date_formats": [],
-        "content_indicators": [],
-        "typical_update_times": [],
-        "last_update_detected": null,
-        "overall_success_rate": 0.5,
-        "avg_items_per_session": 0.0,
-        "avg_extraction_time": 0.0,
-        "first_learned": "2025-09-01 21:39:39.491945",
-        "last_updated": "2025-09-01 21:39:39.491946",
-        "learning_sessions": 0
-      },
-      "0945297de767": {
-        "source_id": "0945297de767",
-        "source_name": "",
-        "base_url": "https://www.journal-officiel.gouv.fr/pages/balo/",
-        "jurisdiction": "France",
-        "extraction_patterns": {},
-        "daily_publication_paths": [],
-        "date_formats": [],
-        "content_indicators": [],
-        "typical_update_times": [],
-        "last_update_detected": null,
-        "overall_success_rate": 0.5,
-        "avg_items_per_session": 0.0,
-        "avg_extraction_time": 0.0,
-        "first_learned": "2025-09-01 21:39:49.635368",
-        "last_updated": "2025-09-01 21:39:49.635375",
-        "learning_sessions": 0
-      },
-      "969b46faafb6": {
-        "source_id": "969b46faafb6",
-        "source_name": "",
-        "base_url": "https://www.journal-officiel.gouv.fr/pages/journal-officiel/",
-        "jurisdiction": "France",
-        "extraction_patterns": {},
-        "daily_publication_paths": [],
-        "date_formats": [],
-        "content_indicators": [],
-        "typical_update_times": [],
-        "last_update_detected": null,
-        "overall_success_rate": 0.5,
-        "avg_items_per_session": 0.0,
-        "avg_extraction_time": 0.0,
-        "first_learned": "2025-09-01 21:39:59.340739",
-        "last_updated": "2025-09-01 21:39:59.340742",
-        "learning_sessions": 0
-      },
-      "6a864244605a": {
-        "source_id": "6a864244605a",
-        "source_name": "",
-        "base_url": "https://www.journal-officiel.gouv.fr/pages/associations/",
-        "jurisdiction": "France",
-        "extraction_patterns": {},
-        "daily_publication_paths": [],
-        "date_formats": [],
-        "content_indicators": [],
-        "typical_update_times": [],
-        "last_update_detected": null,
-        "overall_success_rate": 0.5,
-        "avg_items_per_session": 0.0,
-        "avg_extraction_time": 0.0,
-        "first_learned": "2025-09-01 21:40:08.796265",
-        "last_updated": "2025-09-01 21:40:08.796268",
-        "learning_sessions": 0
-      },
-      "21e770bdf2a6": {
-        "source_id": "21e770bdf2a6",
-        "source_name": "",
-        "base_url": "https://www.journal-officiel.gouv.fr/pages/balo/",
-        "jurisdiction": "France",
-        "extraction_patterns": {},
-        "daily_publication_paths": [],
-        "date_formats": [],
-        "content_indicators": [],
-        "typical_update_times": [],
-        "last_update_detected": null,
-        "overall_success_rate": 0.5,
-        "avg_items_per_session": 0.0,
-        "avg_extraction_time": 0.0,
-        "first_learned": "2025-09-01 21:40:19.418773",
-        "last_updated": "2025-09-01 21:40:19.418777",
-        "learning_sessions": 0
-      }
-    },
-    "common_date_formats": [],
-    "common_content_patterns": [],
-    "common_page_structures": [],
-    "primary_language": "",
-    "locale_info": {},
-    "total_sources": 5,
-    "avg_success_rate": 0.5,
-    "total_learning_sessions": 0,
-    "first_discovered": "2025-09-01T21:39:39.491314",
-    "last_updated": "2025-09-01T21:40:19.418780"
-  },
   "Spain": {
     "jurisdiction_name": "Spain",
     "jurisdiction_code": "Spain",
@@ -123,8 +17,8 @@
         "overall_success_rate": 0.5,
         "avg_items_per_session": 0.0,
         "avg_extraction_time": 0.0,
-        "first_learned": "2025-09-01T21:44:37.162954",
-        "last_updated": "2025-09-01T21:44:37.162955",
+        "first_learned": "2025-09-02T08:05:04.152017",
+        "last_updated": "2025-09-02T08:05:04.152018",
         "learning_sessions": 0
       },
       "99db7c28a726": {
@@ -141,8 +35,8 @@
         "overall_success_rate": 0.5,
         "avg_items_per_session": 0.0,
         "avg_extraction_time": 0.0,
-        "first_learned": "2025-09-01T21:44:41.683718",
-        "last_updated": "2025-09-01T21:44:41.683723",
+        "first_learned": "2025-09-02T08:05:09.396399",
+        "last_updated": "2025-09-02T08:05:09.396422",
         "learning_sessions": 0
       }
     },
@@ -154,7 +48,373 @@
     "total_sources": 2,
     "avg_success_rate": 0.5,
     "total_learning_sessions": 0,
-    "first_discovered": "2025-09-01T21:44:37.161575",
-    "last_updated": "2025-09-01T21:44:41.683731"
+    "first_discovered": "2025-09-02T08:05:04.151542",
+    "last_updated": "2025-09-02T08:05:09.396444"
+  },
+  "United Kingdom": {
+    "jurisdiction_name": "United Kingdom",
+    "jurisdiction_code": "United Kingdom",
+    "source_profiles": {
+      "bb27349b0d92": {
+        "source_id": "bb27349b0d92",
+        "source_name": "",
+        "base_url": "https://www.legislation.gov.uk/new",
+        "jurisdiction": "United Kingdom",
+        "extraction_patterns": {
+          "1dce3e3210d9": {
+            "pattern_id": "1dce3e3210d9",
+            "pattern_type": "css_selector",
+            "pattern_value": ".noPublish",
+            "description": "Indicates no publications available for a category",
+            "success_count": 1,
+            "failure_count": 0,
+            "confidence_score": 1.0,
+            "last_used": "2025-09-02T08:07:26.560699",
+            "last_successful": "2025-09-02T08:07:26.560706",
+            "applies_to": [
+              "https://www.legislation.gov.uk/new"
+            ],
+            "created_date": "2025-09-02T08:07:26.558948",
+            "avg_extraction_time": 0.0,
+            "avg_items_found": 2.0
+          },
+          "cfa03345324b": {
+            "pattern_id": "cfa03345324b",
+            "pattern_type": "css_selector",
+            "pattern_value": "table.summary tbody tr",
+            "description": "Rows in the publication table for categories",
+            "success_count": 1,
+            "failure_count": 0,
+            "confidence_score": 1.0,
+            "last_used": "2025-09-02T08:07:26.561605",
+            "last_successful": "2025-09-02T08:07:26.561605",
+            "applies_to": [
+              "https://www.legislation.gov.uk/new"
+            ],
+            "created_date": "2025-09-02T08:07:26.561599",
+            "avg_extraction_time": 0.0,
+            "avg_items_found": 2.0
+          }
+        },
+        "daily_publication_paths": [],
+        "date_formats": [],
+        "content_indicators": [],
+        "typical_update_times": [],
+        "last_update_detected": null,
+        "overall_success_rate": 0.5,
+        "avg_items_per_session": 2.0,
+        "avg_extraction_time": 19.09061,
+        "first_learned": "2025-09-02T08:07:07.499111",
+        "last_updated": "2025-09-02T08:07:26.563024",
+        "learning_sessions": 1
+      },
+      "b42538982335": {
+        "source_id": "b42538982335",
+        "source_name": "",
+        "base_url": "https://www.thegazette.co.uk/all-notices",
+        "jurisdiction": "United Kingdom",
+        "extraction_patterns": {
+          "15add215df67": {
+            "pattern_id": "15add215df67",
+            "pattern_type": "css_selector",
+            "pattern_value": ".publication-item a",
+            "description": "Links to daily publications",
+            "success_count": 1,
+            "failure_count": 0,
+            "confidence_score": 1.0,
+            "last_used": "2025-09-02T08:07:48.975807",
+            "last_successful": "2025-09-02T08:07:48.975814",
+            "applies_to": [
+              "https://www.thegazette.co.uk/all-notices"
+            ],
+            "created_date": "2025-09-02T08:07:48.975728",
+            "avg_extraction_time": 0.0,
+            "avg_items_found": 1.0
+          },
+          "6e5df2c35b39": {
+            "pattern_id": "6e5df2c35b39",
+            "pattern_type": "css_selector",
+            "pattern_value": ".category-item a",
+            "description": "Links to category pages for regulations",
+            "success_count": 1,
+            "failure_count": 0,
+            "confidence_score": 1.0,
+            "last_used": "2025-09-02T08:07:48.975905",
+            "last_successful": "2025-09-02T08:07:48.975908",
+            "applies_to": [
+              "https://www.thegazette.co.uk/all-notices"
+            ],
+            "created_date": "2025-09-02T08:07:48.975900",
+            "avg_extraction_time": 0.0,
+            "avg_items_found": 1.0
+          }
+        },
+        "daily_publication_paths": [],
+        "date_formats": [],
+        "content_indicators": [],
+        "typical_update_times": [],
+        "last_update_detected": null,
+        "overall_success_rate": 0.5,
+        "avg_items_per_session": 1.0,
+        "avg_extraction_time": 19.988283,
+        "first_learned": "2025-09-02T08:07:29.113781",
+        "last_updated": "2025-09-02T08:07:48.976068",
+        "learning_sessions": 1
+      },
+      "0a6535974c71": {
+        "source_id": "0a6535974c71",
+        "source_name": "",
+        "base_url": "https://www.legislation.gov.uk/new",
+        "jurisdiction": "United Kingdom",
+        "extraction_patterns": {
+          "a8b35e7d2648": {
+            "pattern_id": "a8b35e7d2648",
+            "pattern_type": "css_selector",
+            "pattern_value": ".noPublish",
+            "description": "Indicates no publications available for a specific category",
+            "success_count": 1,
+            "failure_count": 0,
+            "confidence_score": 1.0,
+            "last_used": "2025-09-02T08:08:03.844537",
+            "last_successful": "2025-09-02T08:08:03.844539",
+            "applies_to": [
+              "https://www.legislation.gov.uk/new"
+            ],
+            "created_date": "2025-09-02T08:08:03.844453",
+            "avg_extraction_time": 0.0,
+            "avg_items_found": 2.0
+          },
+          "5cdc94b4b94f": {
+            "pattern_id": "5cdc94b4b94f",
+            "pattern_type": "css_selector",
+            "pattern_value": "h4.accessibleText",
+            "description": "Headings for each jurisdiction's publication section",
+            "success_count": 1,
+            "failure_count": 0,
+            "confidence_score": 1.0,
+            "last_used": "2025-09-02T08:08:03.844587",
+            "last_successful": "2025-09-02T08:08:03.844589",
+            "applies_to": [
+              "https://www.legislation.gov.uk/new"
+            ],
+            "created_date": "2025-09-02T08:08:03.844584",
+            "avg_extraction_time": 0.0,
+            "avg_items_found": 2.0
+          },
+          "a4edc7378f41": {
+            "pattern_id": "a4edc7378f41",
+            "pattern_type": "css_selector",
+            "pattern_value": "table.summary thead tr.accessibleText",
+            "description": "Table headers for publication types",
+            "success_count": 1,
+            "failure_count": 0,
+            "confidence_score": 1.0,
+            "last_used": "2025-09-02T08:08:03.844604",
+            "last_successful": "2025-09-02T08:08:03.844606",
+            "applies_to": [
+              "https://www.legislation.gov.uk/new"
+            ],
+            "created_date": "2025-09-02T08:08:03.844602",
+            "avg_extraction_time": 0.0,
+            "avg_items_found": 2.0
+          }
+        },
+        "daily_publication_paths": [],
+        "date_formats": [],
+        "content_indicators": [],
+        "typical_update_times": [],
+        "last_update_detected": null,
+        "overall_success_rate": 0.5,
+        "avg_items_per_session": 2.0,
+        "avg_extraction_time": 14.119399,
+        "first_learned": "2025-09-02T08:07:49.979076",
+        "last_updated": "2025-09-02T08:08:03.844815",
+        "learning_sessions": 1
+      },
+      "25b05fe995d8": {
+        "source_id": "25b05fe995d8",
+        "source_name": "",
+        "base_url": "https://www.gov.uk/government/publications",
+        "jurisdiction": "United Kingdom",
+        "extraction_patterns": {
+          "56d60b3cd293": {
+            "pattern_id": "56d60b3cd293",
+            "pattern_type": "css_selector",
+            "pattern_value": ".publication-item a",
+            "description": "Links to daily publications",
+            "success_count": 1,
+            "failure_count": 0,
+            "confidence_score": 1.0,
+            "last_used": "2025-09-02T08:08:38.657930",
+            "last_successful": "2025-09-02T08:08:38.657934",
+            "applies_to": [
+              "https://www.gov.uk/government/publications"
+            ],
+            "created_date": "2025-09-02T08:08:38.657911",
+            "avg_extraction_time": 0.0,
+            "avg_items_found": 2.0
+          },
+          "e6b139b3a3c0": {
+            "pattern_id": "e6b139b3a3c0",
+            "pattern_type": "css_selector",
+            "pattern_value": ".govuk-grid-column-one-half",
+            "description": "Container for publication items",
+            "success_count": 1,
+            "failure_count": 0,
+            "confidence_score": 1.0,
+            "last_used": "2025-09-02T08:08:38.657977",
+            "last_successful": "2025-09-02T08:08:38.657981",
+            "applies_to": [
+              "https://www.gov.uk/government/publications"
+            ],
+            "created_date": "2025-09-02T08:08:38.657972",
+            "avg_extraction_time": 0.0,
+            "avg_items_found": 2.0
+          }
+        },
+        "daily_publication_paths": [],
+        "date_formats": [],
+        "content_indicators": [],
+        "typical_update_times": [],
+        "last_update_detected": null,
+        "overall_success_rate": 0.5,
+        "avg_items_per_session": 2.0,
+        "avg_extraction_time": 33.67932,
+        "first_learned": "2025-09-02T08:08:05.038272",
+        "last_updated": "2025-09-02T08:08:38.658011",
+        "learning_sessions": 1
+      },
+      "e8e72104a140": {
+        "source_id": "e8e72104a140",
+        "source_name": "",
+        "base_url": "https://www.thegazette.co.uk/all-notices",
+        "jurisdiction": "United Kingdom",
+        "extraction_patterns": {
+          "0f45e82a99e1": {
+            "pattern_id": "0f45e82a99e1",
+            "pattern_type": "css_selector",
+            "pattern_value": ".publication-item a",
+            "description": "Links to daily publications",
+            "success_count": 1,
+            "failure_count": 0,
+            "confidence_score": 1.0,
+            "last_used": "2025-09-02T08:09:24.441386",
+            "last_successful": "2025-09-02T08:09:24.441388",
+            "applies_to": [
+              "https://www.thegazette.co.uk/all-notices"
+            ],
+            "created_date": "2025-09-02T08:09:24.441270",
+            "avg_extraction_time": 0.0,
+            "avg_items_found": 3.0
+          },
+          "2e816706296f": {
+            "pattern_id": "2e816706296f",
+            "pattern_type": "css_selector",
+            "pattern_value": ".category-title a",
+            "description": "Links to category pages for further drilling down",
+            "success_count": 1,
+            "failure_count": 0,
+            "confidence_score": 1.0,
+            "last_used": "2025-09-02T08:09:24.441415",
+            "last_successful": "2025-09-02T08:09:24.441416",
+            "applies_to": [
+              "https://www.thegazette.co.uk/all-notices"
+            ],
+            "created_date": "2025-09-02T08:09:24.441412",
+            "avg_extraction_time": 0.0,
+            "avg_items_found": 3.0
+          }
+        },
+        "daily_publication_paths": [],
+        "date_formats": [],
+        "content_indicators": [],
+        "typical_update_times": [],
+        "last_update_detected": null,
+        "overall_success_rate": 0.5,
+        "avg_items_per_session": 3.0,
+        "avg_extraction_time": 44.47891,
+        "first_learned": "2025-09-02T08:08:40.109077",
+        "last_updated": "2025-09-02T08:09:24.441508",
+        "learning_sessions": 1
+      },
+      "ebd493c90e00": {
+        "source_id": "ebd493c90e00",
+        "source_name": "",
+        "base_url": "https://www.thegazette.co.uk/place-notice",
+        "jurisdiction": "United Kingdom",
+        "extraction_patterns": {
+          "bdfb21175e9a": {
+            "pattern_id": "bdfb21175e9a",
+            "pattern_type": "css_selector",
+            "pattern_value": ".publication-item a",
+            "description": "Links to daily publications",
+            "success_count": 1,
+            "failure_count": 0,
+            "confidence_score": 1.0,
+            "last_used": "2025-09-02T08:09:44.710030",
+            "last_successful": "2025-09-02T08:09:44.710033",
+            "applies_to": [
+              "https://www.thegazette.co.uk/place-notice"
+            ],
+            "created_date": "2025-09-02T08:09:44.709993",
+            "avg_extraction_time": 0.0,
+            "avg_items_found": 1.0
+          },
+          "6ef8e81e6c20": {
+            "pattern_id": "6ef8e81e6c20",
+            "pattern_type": "css_selector",
+            "pattern_value": ".publication-date",
+            "description": "Dates associated with publications",
+            "success_count": 1,
+            "failure_count": 0,
+            "confidence_score": 1.0,
+            "last_used": "2025-09-02T08:09:44.710064",
+            "last_successful": "2025-09-02T08:09:44.710066",
+            "applies_to": [
+              "https://www.thegazette.co.uk/place-notice"
+            ],
+            "created_date": "2025-09-02T08:09:44.710061",
+            "avg_extraction_time": 0.0,
+            "avg_items_found": 1.0
+          }
+        },
+        "daily_publication_paths": [],
+        "date_formats": [],
+        "content_indicators": [],
+        "typical_update_times": [],
+        "last_update_detected": null,
+        "overall_success_rate": 0.5,
+        "avg_items_per_session": 1.0,
+        "avg_extraction_time": 19.136571,
+        "first_learned": "2025-09-02T08:09:26.095110",
+        "last_updated": "2025-09-02T08:09:44.710096",
+        "learning_sessions": 1
+      }
+    },
+    "common_date_formats": [
+      "YYYY-MM-DD",
+      "DD/MM/YYYY"
+    ],
+    "common_content_patterns": [
+      "Nothing published",
+      "published",
+      "new publication",
+      "today's notices",
+      "latest updates",
+      "Official place of publication for newly enacted legislation",
+      "recently published",
+      "today's publications",
+      "new publications",
+      "recent notices",
+      "recent publications"
+    ],
+    "common_page_structures": [],
+    "primary_language": "",
+    "locale_info": {},
+    "total_sources": 6,
+    "avg_success_rate": 0.5,
+    "total_learning_sessions": 0,
+    "first_discovered": "2025-09-02T08:07:07.498466",
+    "last_updated": "2025-09-02T08:09:26.095126"
   }
 }

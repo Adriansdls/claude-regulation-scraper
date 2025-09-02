@@ -1,0 +1,73 @@
+[
+  {
+    "session_id": "intelligence_20250902_074747",
+    "timestamp": "2025-09-02T07:47:47.879439",
+    "source_id": "bb27349b0d92",
+    "jurisdiction": "United Kingdom",
+    "extraction_method": "llm_analysis",
+    "patterns_used": [],
+    "success": true,
+    "items_found": 2,
+    "extraction_time": 22.439391,
+    "error_message": null,
+    "new_patterns_discovered": [],
+    "patterns_reinforced": [],
+    "patterns_weakened": [],
+    "notes": []
+  },
+  {
+    "session_id": "category_extraction_20250902_074810",
+    "timestamp": "2025-09-02T07:48:10.322765",
+    "source_id": "bb27349b0d92",
+    "jurisdiction": "United Kingdom",
+    "extraction_method": "category_drill_down",
+    "patterns_used": [],
+    "success": true,
+    "items_found": 1,
+    "extraction_time": 8.66319,
+    "error_message": null,
+    "new_patterns_discovered": [],
+    "patterns_reinforced": [],
+    "patterns_weakened": [],
+    "notes": [
+      "Successfully extracted 1 publications from category page: UK Statutory Instruments"
+    ]
+  },
+  {
+    "session_id": "intelligence_20250902_075037",
+    "timestamp": "2025-09-02T07:50:37.382213",
+    "source_id": "bb27349b0d92",
+    "jurisdiction": "United Kingdom",
+    "extraction_method": "learned_patterns",
+    "patterns_used": [
+      "1dce3e3210d9",
+      "036c872b10f6"
+    ],
+    "success": true,
+    "items_found": 1,
+    "extraction_time": 0.096453,
+    "error_message": null,
+    "new_patterns_discovered": [],
+    "patterns_reinforced": [],
+    "patterns_weakened": [],
+    "notes": []
+  },
+  {
+    "session_id": "category_extraction_20250902_075037",
+    "timestamp": "2025-09-02T07:50:37.479329",
+    "source_id": "bb27349b0d92",
+    "jurisdiction": "United Kingdom",
+    "extraction_method": "category_drill_down",
+    "patterns_used": [],
+    "success": true,
+    "items_found": 1,
+    "extraction_time": 15.246356,
+    "error_message": null,
+    "new_patterns_discovered": [],
+    "patterns_reinforced": [],
+    "patterns_weakened": [],
+    "notes": [
+      "Successfully extracted 1 publications from category page: UK Statutory Instruments"
+    ]
+  }
+]

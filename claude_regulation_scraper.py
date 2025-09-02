@@ -9,7 +9,7 @@ import os
 import sys
 import json
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, List, Optional
 
 # Rich for beautiful terminal output
@@ -365,7 +365,7 @@ def add_source(ctx, name, url, source_type, jurisdiction, agency, feed_url, freq
                 source_type=PublicationSourceType(source_type),
                 jurisdiction=jurisdiction,
                 agency=agency,
-                discovered_date=datetime.utcnow(),
+                discovered_date=datetime.now(timezone.utc),
                 discovery_method="human_input",
                 confidence_score=1.0,  # Human input gets max confidence
                 update_frequency=UpdateFrequency(frequency),
@@ -535,7 +535,7 @@ def run_monitoring(ctx, sources, jurisdictions, compliance_only, categories, out
                 source_ids = [source.source_id for source in target_sources]
                 result = await monitoring_agent._monitor_publication_feeds(
                     source_ids=source_ids,
-                    target_date=datetime.utcnow().isoformat(),
+                    target_date=datetime.now(timezone.utc).isoformat(),
                     relevance_threshold=0.3
                 )
                 
@@ -1227,7 +1227,7 @@ def extract_url(ctx, url, output, output_file):
                     if output == 'json':
                         output_data = {
                             'url': url,
-                            'extraction_date': datetime.utcnow().isoformat(),
+                            'extraction_date': datetime.now(timezone.utc).isoformat(),
                             'content': extracted_content,
                             'metadata': metadata,
                             'content_length': len(extracted_content)
@@ -1246,7 +1246,7 @@ def extract_url(ctx, url, output, output_file):
                         
                         with open(output_file, 'w') as f:
                             f.write(f"Regulation Extract from: {url}\n")
-                            f.write(f"Extracted on: {datetime.utcnow().isoformat()}\n")
+                            f.write(f"Extracted on: {datetime.now(timezone.utc).isoformat()}\n")
                             f.write("="*80 + "\n\n")
                             f.write(extracted_content)
                         
