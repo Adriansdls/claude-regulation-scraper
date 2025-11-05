@@ -1,0 +1,132 @@
+[build-system]
+requires = ["setuptools>=65.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "research-graph-explorer"
+version = "0.1.0"
+description = "AI-powered research paper discovery and network analysis system for achieving 100% recall and finding literature gaps"
+authors = [
+    {name = "Research Graph Team"}
+]
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+keywords = [
+    "research", "papers", "citations", "network-analysis",
+    "literature-review", "knowledge-extraction", "ontology"
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+
+dependencies = [
+    # Core dependencies
+    "pydantic>=2.0.0",
+    "pyyaml>=6.0",
+    "python-dotenv>=1.0.0",
+    "aiofiles>=23.0.0",
+    "aiohttp>=3.9.0",
+    "httpx>=0.25.0",
+
+    # LLM and AI
+    "anthropic>=0.18.0",
+    "openai>=1.12.0",
+    "langextract>=0.1.0",  # Google's extraction library
+    "tiktoken>=0.5.0",
+
+    # Paper APIs
+    "semanticscholar>=0.8.0",
+    "arxiv>=2.1.0",
+    "requests>=2.31.0",
+
+    # PDF Processing
+    "pymupdf>=1.23.0",
+    "pdfplumber>=0.10.0",
+    "pypdf>=3.17.0",
+
+    # Graph Processing
+    "networkx>=3.2",
+    "python-igraph>=0.11.0",  # Faster for large graphs
+    "community>=1.0.0b1",  # Louvain community detection
+
+    # Data & Storage
+    "sqlalchemy>=2.0.0",
+    "redis>=5.0.0",
+
+    # CLI
+    "click>=8.1.0",
+    "rich>=13.7.0",
+    "tabulate>=0.9.0",
+
+    # Utilities
+    "tqdm>=4.66.0",
+    "dateparser>=1.2.0",
+    "python-dateutil>=2.8.0",
+
+    # Scientific computing
+    "numpy>=1.26.0",
+    "scipy>=1.11.0",
+    "scikit-learn>=1.4.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-mock>=3.12.0",
+    "pytest-cov>=4.1.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.7.0",
+]
+
+neo4j = [
+    "neo4j>=5.14.0",
+]
+
+all = [
+    "research-graph-explorer[dev,neo4j]",
+]
+
+[project.scripts]
+rgx = "src.cli.main:cli"
+
+[project.urls]
+Homepage = "https://github.com/yourusername/research-graph-explorer"
+Documentation = "https://github.com/yourusername/research-graph-explorer#readme"
+Repository = "https://github.com/yourusername/research-graph-explorer"
+Issues = "https://github.com/yourusername/research-graph-explorer/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.black]
+line-length = 100
+target-version = ['py310', 'py311']
+include = '\.pyi?$'
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W"]
+ignore = ["E501"]  # Line too long (handled by black)
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false  # Allow gradual typing
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+asyncio_mode = "auto"

@@ -1,0 +1,109 @@
+# Machine Learning Research Ontology
+# Example ontology for extracting knowledge from ML papers
+
+name: "ML Research Ontology"
+description: "Ontology for machine learning and AI research papers"
+domain: "machine_learning"
+version: "1.0.0"
+
+entity_types:
+  - name: "Method"
+    description: "Machine learning algorithm, technique, or approach"
+    attributes:
+      name: string
+      category: string  # supervised, unsupervised, reinforcement, etc.
+      year_introduced: int
+      complexity: string  # O(n), O(n^2), etc.
+    examples:
+      - "BERT (Bidirectional Encoder Representations from Transformers)"
+      - "ResNet (Residual Neural Networks)"
+      - "GPT-3 (Generative Pre-trained Transformer)"
+
+  - name: "Dataset"
+    description: "Training or evaluation dataset"
+    attributes:
+      name: string
+      size: int
+      domain: string
+      public: bool
+    examples:
+      - "ImageNet (1.2M images, 1000 classes)"
+      - "SQuAD (Stanford Question Answering Dataset)"
+      - "GLUE (General Language Understanding Evaluation)"
+
+  - name: "Metric"
+    description: "Evaluation metric or performance measure"
+    attributes:
+      name: string
+      value: float
+      higher_is_better: bool
+    examples:
+      - "Accuracy: 95.2%"
+      - "F1 Score: 0.89"
+      - "Perplexity: 15.3"
+
+  - name: "Finding"
+    description: "Key result, claim, or discovery"
+    attributes:
+      claim: string
+      evidence_strength: string  # strong, moderate, weak
+      replicated: bool
+    examples:
+      - "Self-attention mechanisms outperform recurrent architectures on long-range dependencies"
+      - "Pre-training on large corpora improves downstream task performance"
+
+  - name: "Limitation"
+    description: "Acknowledged limitation or weakness"
+    attributes:
+      description: string
+      severity: string  # high, medium, low
+      addressed_by: string  # method that addresses it
+    examples:
+      - "High computational cost limits practical deployment"
+      - "Performance degrades on out-of-distribution examples"
+
+relationship_types:
+  - name: "uses"
+    description: "Method uses Dataset or Metric"
+    source_types: ["Method"]
+    target_types: ["Dataset", "Metric"]
+    directional: true
+    examples:
+      - "BERT uses SQuAD dataset for evaluation"
+
+  - name: "improves"
+    description: "Method A improves upon Method B"
+    source_types: ["Method"]
+    target_types: ["Method"]
+    attributes:
+      improvement_percentage: float
+      dimension: string  # accuracy, speed, memory, etc.
+    directional: true
+    examples:
+      - "GPT-3 improves upon GPT-2 in few-shot learning"
+
+  - name: "evaluates_on"
+    description: "Method evaluated on Dataset"
+    source_types: ["Method"]
+    target_types: ["Dataset"]
+    directional: true
+
+  - name: "achieves"
+    description: "Method achieves Metric"
+    source_types: ["Method"]
+    target_types: ["Metric"]
+    directional: true
+
+  - name: "contradicts"
+    description: "Finding A contradicts Finding B"
+    source_types: ["Finding"]
+    target_types: ["Finding"]
+    directional: false
+
+  - name: "addresses"
+    description: "Method addresses Limitation"
+    source_types: ["Method"]
+    target_types: ["Limitation"]
+    directional: true
+
+extraction_examples: []
