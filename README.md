@@ -48,17 +48,22 @@ cp .env.example .env
 ### Basic Usage
 
 ```bash
-# Discover papers for a research question
-rgx discover "What are the latest advances in transformer architectures for NLP?"
+# Phase 1: Discover papers
+python -m src.cli.main discover \
+  "What are the latest advances in transformer architectures for NLP?" \
+  --max-papers 100 \
+  --output papers.json
 
-# Extract knowledge using an ontology
-rgx extract --ontology config/ontologies/ml_research.yaml
+# Phase 2: Extract knowledge using an ontology
+python -m src.cli.main extract papers.json \
+  --ontology config/ontologies/ml_research.yaml \
+  --output knowledge_graph.json
 
-# Analyze the network
-rgx analyze --find-gaps --find-opportunities
-
-# Visualize the graph
-rgx visualize --output graph.html
+# Phase 3: Analyze the network (coming soon)
+python -m src.cli.main analyze knowledge_graph.json \
+  --find-gaps \
+  --find-opportunities \
+  --output analysis.json
 ```
 
 ---
@@ -137,24 +142,36 @@ research-graph-explorer/
 
 ## 📊 Current Status
 
-### ✅ Completed
+### ✅ Phase 1: Discovery (Complete)
 - [x] Architecture design
 - [x] Project structure
-- [x] Dependencies setup
+- [x] Core data models (Paper, Author, Citation)
+- [x] API clients (Semantic Scholar, arXiv)
+- [x] Seed generator with LLM-powered queries
+- [x] Frontier-based explorer with relevance scoring
+- [x] Multi-source paper fetcher with fallback
+- [x] CLI interface for discovery
+- [x] Caching and infrastructure
 
-### 🚧 In Progress
-- [ ] Core data models
-- [ ] API clients (Semantic Scholar, arXiv)
-- [ ] Seed generator
-- [ ] Frontier explorer
+### ✅ Phase 2: Extraction (Complete!)
+- [x] PDF acquisition pipeline (arXiv, Unpaywall, DOI)
+- [x] Text extraction (PyMuPDF, pdfplumber)
+- [x] Structured text parsing (sections detection)
+- [x] LangExtract integration for entities
+- [x] Relationship extraction
+- [x] Knowledge graph construction (NetworkX)
+- [x] Extraction orchestrator
+- [x] CLI commands for extraction
+- [x] Gephi export for visualization
 
-### 📋 Planned
-- [ ] PDF acquisition pipeline
-- [ ] LangExtract integration
-- [ ] Knowledge graph construction
-- [ ] Network analysis algorithms
-- [ ] CLI interface
-- [ ] Documentation
+### 🚧 Phase 3: Analysis (Next)
+- [ ] Gap detection algorithms
+- [ ] Echo chamber detection
+- [ ] Citation ring finding
+- [ ] Argument weakness analysis
+- [ ] Interdisciplinary bridge detection
+- [ ] Emerging trend identification
+- [ ] Research opportunity finder
 
 ---
 

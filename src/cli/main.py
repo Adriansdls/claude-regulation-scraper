@@ -11,6 +11,7 @@ from rich import print as rprint
 
 from ..discovery.seed_generator import SeedGenerator
 from ..discovery.frontier_explorer import FrontierExplorer
+from ..models.paper import Paper
 from ..infrastructure.config import get_config
 
 
@@ -164,6 +165,89 @@ async def _discover(
             json.dump(output_data, f, indent=2, default=str)
 
         console.print(f"[bold green]✓[/bold green] Saved results to [cyan]{output}[/cyan]")
+
+
+@cli.command()
+@click.argument("discovery_file")
+@click.option("--ontology", required=True, help="Path to ontology YAML file")
+@click.option("--output", default=None, help="Output file for knowledge graph (JSON)")
+@click.option("--max-papers", default=None, type=int, help="Maximum papers to extract from")
+@click.option("--download-pdfs/--no-download-pdfs", default=True, help="Download PDFs first")
+def extract(discovery_file: str, ontology: str, output: str, max_papers: int, download_pdfs: bool):
+    """Extract knowledge from discovered papers using an ontology.
+
+    Example:
+        rgx extract papers.json --ontology config/ontologies/ml_research.yaml --output kg.json
+    """
+    asyncio.run(_extract(discovery_file, ontology, output, max_papers, download_pdfs))
+
+
+async def _extract(
+    discovery_file: str, ontology_path: str, output: str, max_papers: int, download_pdfs: bool
+):
+    """Internal extract function."""
+    from pathlib import Path
+    import yaml
+    from ..models.ontology import Ontology, EntityType, RelationType
+    from ..extraction.orchestrator import ExtractionOrchestrator
+
+    console.print("\n[bold cyan]Phase 2: Knowledge Extraction[/bold cyan]\n")
+
+    # Load discovery results
+    console.print(f"[yellow]Loading papers from:[/yellow] {discovery_file}")
+    discovery_path = Path(discovery_file)
+    if not discovery_path.exists():
+        console.print(f"[bold red]Error:[/bold red] File not found: {discovery_file}")
+        return
+
+    with open(discovery_path, "r") as f:
+        discovery_data = json.load(f)
+
+    papers = [Paper(**p) for p in discovery_data.get("papers", [])]
+    console.print(f"✓ Loaded {len(papers)} papers\n")
+
+    # Load ontology
+    console.print(f"[yellow]Loading ontology from:[/yellow] {ontology_path}")
+    ontology_file = Path(ontology_path)
+    if not ontology_file.exists():
+        console.print(f"[bold red]Error:[/bold red] File not found: {ontology_path}")
+        return
+
+    with open(ontology_file, "r") as f:
+        ontology_data = yaml.safe_load(f)
+
+    # Convert to Ontology model
+    ontology = Ontology(
+        name=ontology_data["name"],
+        description=ontology_data["description"],
+        domain=ontology_data["domain"],
+        version=ontology_data.get("version", "1.0.0"),
+        entity_types=[EntityType(**et) for et in ontology_data.get("entity_types", [])],
+        relationship_types=[
+            RelationType(**rt) for rt in ontology_data.get("relationship_types", [])
+        ],
+    )
+    console.print(f"✓ Loaded ontology: {ontology.name}")
+    console.print(f"  Entity types: {[et.name for et in ontology.entity_types]}")
+    console.print(f"  Relationship types: {[rt.name for rt in ontology.relationship_types]}\n")
+
+    # Run extraction
+    orchestrator = ExtractionOrchestrator(ontology)
+
+    knowledge_graph = await orchestrator.extract_from_papers(
+        papers=papers, download_pdfs=download_pdfs, max_papers=max_papers
+    )
+
+    # Save results
+    if output:
+        output_path = Path(output)
+        orchestrator.save_graph(str(output_path))
+
+        # Also export for Gephi
+        gephi_dir = output_path.parent / f"{output_path.stem}_gephi"
+        orchestrator.export_for_visualization(str(gephi_dir))
+
+    console.print("\n[bold green]✓ Extraction complete![/bold green]")
 
 
 @cli.command()
