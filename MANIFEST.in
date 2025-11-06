@@ -1,0 +1,30 @@
+# Include documentation
+include README.md
+include LICENSE
+include INSTALL.md
+include UX_FEATURES_GUIDE.md
+include UX_ENHANCEMENT_PLAN.md
+include PHASE3_ANALYSIS.md
+include PHASE3.2_AGENT_SYSTEM.md
+include NETWORK_SCIENCE_AGENT_DESIGN.md
+include CLAUDE_AGENT_SDK_RESEARCH_REPORT.md
+
+# Include requirements
+include requirements.txt
+include .env.example
+
+# Include configuration
+recursive-include config *.yaml *.yml *.json
+
+# Include source package
+recursive-include src *.py
+
+# Exclude development files
+exclude .gitignore
+exclude .env
+recursive-exclude tests *
+recursive-exclude notebooks *
+recursive-exclude data *
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+recursive-exclude * .DS_Store
