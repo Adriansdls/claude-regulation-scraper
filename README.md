@@ -2,7 +2,11 @@
 
 **AI-powered research paper discovery and network analysis system for achieving 100% recall and finding literature gaps.**
 
-> **Status**: 🚧 Active Development - Phase 1 (Discovery Engine)
+> **Status**: 🚧 Active Development - Phase 3.1 (Advanced Graph Algorithms) ✅
+> - ✅ Phase 1: Discovery Engine
+> - ✅ Phase 2: Knowledge Extraction
+> - ✅ Phase 3.1: Graph Algorithms & Dynamic Execution
+> - 🚧 Phase 3.2: Agentic System (Next!)
 
 ---
 
@@ -59,11 +63,24 @@ python -m src.cli.main extract papers.json \
   --ontology config/ontologies/ml_research.yaml \
   --output knowledge_graph.json
 
-# Phase 3: Analyze the network (coming soon)
-python -m src.cli.main analyze knowledge_graph.json \
-  --find-gaps \
-  --find-opportunities \
-  --output analysis.json
+# Phase 3: Analyze the network
+python
+from src.analysis import GraphAnalyzer, DynamicGraphQueryExecutor
+from src.extraction import KnowledgeGraph
+
+kg = KnowledgeGraph.load("knowledge_graph.json")
+analyzer = GraphAnalyzer(kg)
+
+# Find literature gaps
+gaps = analyzer.detect_gaps()
+print(f"Found {len(gaps)} gaps")
+
+# Detect echo chambers
+chambers = analyzer.find_echo_chambers()
+
+# Or use dynamic queries for custom analyses
+dynamic = DynamicGraphQueryExecutor(kg)
+result = dynamic.query("your custom NetworkX code here")
 ```
 
 ---
@@ -84,7 +101,7 @@ Phase 1: Discovery       Phase 2: Extraction      Phase 3: Analysis
    Papers                    Entities                  Insights
 ```
 
-### Phase 1: Discovery Engine (Current Focus)
+### Phase 1: Discovery Engine ✅
 
 - **Seed Generator**: Converts research question to seed papers
 - **Frontier Explorer**: BFS/DFS with relevance scoring
@@ -92,11 +109,33 @@ Phase 1: Discovery       Phase 2: Extraction      Phase 3: Analysis
 - **Multi-Source Fetcher**: Semantic Scholar, arXiv, CrossRef, PubMed
 - **PDF Processor**: Acquisition and text extraction
 
-### Phase 2: Knowledge Extraction (Coming Soon)
+### Phase 2: Knowledge Extraction ✅
 
-- **Ontology Manager**: User-defined schemas
+- **Ontology Manager**: User-defined schemas (YAML)
 - **LangExtract Integration**: Entity and relationship extraction
-- **Knowledge Graph**: Multi-layer graph construction
+- **Knowledge Graph**: Multi-layer graph (papers + concepts)
+- **PDF Processing**: Multi-source download with fallbacks
+- **Text Extraction**: PyMuPDF + pdfplumber with quality scoring
+
+### Phase 3.1: Advanced Graph Algorithms ✅
+
+- **GraphAnalyzer**: Pre-defined algorithms for common operations
+  - Community detection (Louvain, Leiden, Label Propagation)
+  - Centrality metrics (PageRank, Betweenness, Closeness, Eigenvector)
+  - Gap detection (isolated concepts, missing links)
+  - Echo chamber detection (citation rings)
+  - Path analysis, Author network analysis
+- **DynamicGraphQueryExecutor**: LLM-generated NetworkX code execution
+  - Safe sandbox (timeout, validation, restricted imports)
+  - Handles novel queries we didn't anticipate!
+
+### Phase 3.2: Agentic System (Next)
+
+- **NetworkScienceAgent**: Goal-oriented research assistant
+- **Claude Agents SDK Integration**: True agency, not LLM chains
+- **Interactive Chat Mode**: Beautiful terminal UX
+- **Natural Language Queries**: Ask questions, get analyses
+- **TodoWrite Transparency**: See agent's thinking and planning
 
 ### Phase 3: Network Analysis (Coming Soon)
 
