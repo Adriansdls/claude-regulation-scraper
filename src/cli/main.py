@@ -25,6 +25,30 @@ def cli():
 
 
 @cli.command()
+@click.argument("knowledge_graph_path")
+@click.option("--api-key", default=None, help="Anthropic API key (or set ANTHROPIC_API_KEY env var)")
+def chat(knowledge_graph_path: str, api_key: str):
+    """
+    Interactive chat with the Network Science Agent.
+
+    Ask questions about your research graph in natural language!
+
+    Example:
+        rge chat knowledge_graph.json
+
+    The agent can:
+    - Find literature gaps
+    - Detect echo chambers
+    - Analyze influence and importance
+    - Study research communities
+    - Trace connections between papers
+    - Write custom NetworkX code for novel analyses
+    """
+    from .chat import chat_loop
+    asyncio.run(chat_loop(knowledge_graph_path, api_key))
+
+
+@cli.command()
 @click.argument("research_question")
 @click.option("--max-papers", default=100, help="Maximum papers to discover")
 @click.option("--num-seeds", default=10, help="Number of seed papers")
