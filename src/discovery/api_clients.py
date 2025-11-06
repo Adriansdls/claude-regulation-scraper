@@ -2,10 +2,24 @@
 
 import asyncio
 import time
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, TYPE_CHECKING
 from datetime import datetime
 import aiohttp
-import arxiv as arxiv_api
+
+# Optional: arxiv library (may not be available in all environments)
+try:
+    import arxiv as arxiv_api
+    ARXIV_AVAILABLE = True
+except ImportError:
+    ARXIV_AVAILABLE = False
+    arxiv_api = None
+
+if TYPE_CHECKING:
+    from typing import Any as ArxivResult
+elif ARXIV_AVAILABLE:
+    ArxivResult = arxiv_api.Result
+else:
+    ArxivResult = Any
 
 from ..models.paper import Paper, Author, PaperSource, PaperMetadata
 from ..infrastructure.cache import get_cache
@@ -298,6 +312,11 @@ class ArXivClient:
         Returns:
             List of Paper objects
         """
+        # Check if arxiv library is available
+        if not ARXIV_AVAILABLE:
+            print("Warning: arxiv library not available. Skipping arXiv search.")
+            return []
+
         # Check cache
         cache_key = f"arxiv_search:{query}:{max_results}"
         cached = await self.cache.get(cache_key)
@@ -323,7 +342,7 @@ class ArXivClient:
             print(f"Error searching arXiv: {e}")
             return []
 
-    def _convert_to_paper(self, result: arxiv_api.Result) -> Paper:
+    def _convert_to_paper(self, result: ArxivResult) -> Paper:
         """Convert arXiv result to Paper model."""
         arxiv_id = result.entry_id.split("/")[-1]
 

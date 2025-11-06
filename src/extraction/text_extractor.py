@@ -3,8 +3,19 @@
 import re
 from pathlib import Path
 from typing import Optional, Dict, List, Tuple
-import fitz  # PyMuPDF
-import pdfplumber
+
+# Try to import PDF libraries (may not be available in all environments)
+try:
+    import fitz  # PyMuPDF
+    PYMUPDF_AVAILABLE = True
+except ImportError:
+    PYMUPDF_AVAILABLE = False
+
+try:
+    import pdfplumber
+    PDFPLUMBER_AVAILABLE = True
+except ImportError:
+    PDFPLUMBER_AVAILABLE = False
 
 from ..models.paper import Paper
 
@@ -92,6 +103,9 @@ class TextExtractor:
         Returns:
             TextExtractionResult
         """
+        if not PYMUPDF_AVAILABLE:
+            return TextExtractionResult(success=False, error="PyMuPDF not available")
+
         try:
             doc = fitz.open(pdf_path)
 
@@ -133,6 +147,9 @@ class TextExtractor:
         Returns:
             TextExtractionResult
         """
+        if not PDFPLUMBER_AVAILABLE:
+            return TextExtractionResult(success=False, error="pdfplumber not available")
+
         try:
             full_text = ""
 
