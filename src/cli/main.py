@@ -8,6 +8,8 @@ from rich.console import Console
 from rich.table import Table
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich import print as rprint
+from rich.panel import Panel
+from rich.markdown import Markdown
 
 from ..discovery.seed_generator import SeedGenerator
 from ..discovery.frontier_explorer import FrontierExplorer
@@ -18,23 +20,97 @@ from ..infrastructure.config import get_config
 console = Console()
 
 
-@click.group()
-def cli():
+def print_welcome_banner():
+    """Print the amazing welcome banner - like starting a video game!"""
+    banner = """
+# 🔬 Research Graph Explorer (RGE)
+
+**AI-Powered Paper Discovery & Network Science Analysis**
+
+---
+
+Welcome to your research command center! RGE helps you explore academic literature
+like never before - discover papers, extract knowledge, and chat with your research
+using cutting-edge AI agents.
+
+## 🚀 Quick Start Workflows
+
+### 1️⃣  Discover New Research
+```bash
+rge discover "What are the latest advances in transformers?"
+```
+Intelligently searches and scores papers relevant to your question
+
+### 2️⃣  Extract Knowledge
+```bash
+rge extract papers.json --ontology config/ontologies/ml_research.yaml
+```
+Builds a knowledge graph from your papers using custom ontologies
+
+### 3️⃣  Chat with Your Research
+```bash
+rge chat                     # Auto-detects knowledge graph
+rge chat --list              # List available graphs
+```
+Ask natural language questions, find gaps, detect echo chambers!
+
+## 📋 All Commands
+
+- `rge discover <question>` - Discover relevant papers
+- `rge extract <file>` - Extract knowledge graph
+- `rge chat [graph]` - Interactive research assistant
+- `rge config-check` - Verify API keys & settings
+- `rge version` - Show version info
+
+## 💡 First Time Here?
+
+1. Check your config: `rge config-check`
+2. Discover some papers: `rge discover "your research question"`
+3. Extract knowledge: `rge extract papers.json --ontology <ontology.yaml>`
+4. Start chatting: `rge chat`
+
+## 🎯 Need Help?
+
+- Full docs: [Coming soon]
+- Examples: `rge <command> --help`
+- GitHub: [Your repo URL]
+
+**Ready to explore? Run any command above to get started! 🎉**
+"""
+
+    console.print(Panel.fit(
+        Markdown(banner),
+        border_style="cyan",
+        title="[bold cyan]✨ Welcome to RGE ✨[/bold cyan]",
+        subtitle="[dim]Run 'rge --help' for more options[/dim]",
+        padding=(1, 2)
+    ))
+
+
+@click.group(invoke_without_command=True)
+@click.pass_context
+def cli(ctx):
     """Research Graph Explorer - AI-powered paper discovery and analysis."""
-    pass
+    # Show welcome banner if no command given
+    if ctx.invoked_subcommand is None:
+        print_welcome_banner()
+        console.print()  # Extra spacing
 
 
 @cli.command()
-@click.argument("knowledge_graph_path")
+@click.argument("knowledge_graph_path", required=False)
 @click.option("--api-key", default=None, help="Anthropic API key (or set ANTHROPIC_API_KEY env var)")
-def chat(knowledge_graph_path: str, api_key: str):
+@click.option("--list", is_flag=True, help="List available knowledge graphs")
+def chat(knowledge_graph_path: str, api_key: str, list: bool):
     """
     Interactive chat with the Network Science Agent.
 
     Ask questions about your research graph in natural language!
 
-    Example:
-        rge chat knowledge_graph.json
+    Examples:
+        rge chat                          # Auto-detect knowledge graph
+        rge chat knowledge_graph.json     # Use specific graph
+        rge chat --list                   # List available graphs
 
     The agent can:
     - Find literature gaps
@@ -44,6 +120,74 @@ def chat(knowledge_graph_path: str, api_key: str):
     - Trace connections between papers
     - Write custom NetworkX code for novel analyses
     """
+    import glob
+
+    # List available graphs if requested
+    if list:
+        console.print("\n[bold cyan]Available Knowledge Graphs:[/bold cyan]\n")
+        graphs = glob.glob("**/*.json", recursive=True)
+        kg_files = [g for g in graphs if "knowledge" in g.lower() or "kg" in g.lower()]
+
+        if not kg_files:
+            console.print("[yellow]No knowledge graph files found.[/yellow]")
+            console.print("\nTip: Run 'rge discover' then 'rge extract' to create one!\n")
+        else:
+            for i, kg in enumerate(kg_files, 1):
+                size = Path(kg).stat().st_size / 1024  # KB
+                console.print(f"{i}. [cyan]{kg}[/cyan] [dim]({size:.1f} KB)[/dim]")
+            console.print()
+        return
+
+    # Auto-detect knowledge graph if not provided
+    if not knowledge_graph_path:
+        # Look for common patterns
+        candidates = []
+        for pattern in ["knowledge_graph.json", "kg.json", "*knowledge*.json", "*kg*.json"]:
+            candidates.extend(glob.glob(pattern))
+            candidates.extend(glob.glob(f"**/{pattern}", recursive=True))
+
+        # Remove duplicates and sort by modification time
+        candidates = list(set(candidates))
+        if candidates:
+            candidates.sort(key=lambda x: Path(x).stat().st_mtime, reverse=True)
+
+        if not candidates:
+            console.print("\n[bold red]No knowledge graph found![/bold red]\n")
+            console.print("[yellow]You need a knowledge graph to chat with.[/yellow]")
+            console.print("\nOptions:")
+            console.print("  1. Create one:")
+            console.print("     [cyan]rge discover 'your research question'[/cyan]")
+            console.print("     [cyan]rge extract papers.json --ontology config/ontologies/ml_research.yaml[/cyan]")
+            console.print("\n  2. Specify a path:")
+            console.print("     [cyan]rge chat /path/to/knowledge_graph.json[/cyan]")
+            console.print("\n  3. List available graphs:")
+            console.print("     [cyan]rge chat --list[/cyan]\n")
+            return
+
+        if len(candidates) == 1:
+            knowledge_graph_path = candidates[0]
+            console.print(f"\n[green]✓[/green] Auto-detected knowledge graph: [cyan]{knowledge_graph_path}[/cyan]\n")
+        else:
+            # Multiple found - let user choose
+            console.print(f"\n[bold cyan]Found {len(candidates)} knowledge graphs:[/bold cyan]\n")
+            for i, kg in enumerate(candidates[:10], 1):  # Show top 10
+                size = Path(kg).stat().st_size / 1024
+                mtime = Path(kg).stat().st_mtime
+                from datetime import datetime
+                date = datetime.fromtimestamp(mtime).strftime("%Y-%m-%d %H:%M")
+                console.print(f"{i}. [cyan]{kg}[/cyan]")
+                console.print(f"   [dim]{size:.1f} KB | Modified: {date}[/dim]")
+
+            console.print("\nUsing most recent: [cyan]" + candidates[0] + "[/cyan]")
+            console.print("[dim]Tip: Specify a different one with 'rge chat <path>'[/dim]\n")
+            knowledge_graph_path = candidates[0]
+
+    # Validate path exists
+    if not Path(knowledge_graph_path).exists():
+        console.print(f"\n[bold red]Error:[/bold red] File not found: {knowledge_graph_path}\n")
+        console.print("Run [cyan]rge chat --list[/cyan] to see available graphs.\n")
+        return
+
     from .chat import chat_loop
     asyncio.run(chat_loop(knowledge_graph_path, api_key))
 
