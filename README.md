@@ -34,44 +34,33 @@ Research Graph Explorer is an ambitious system that:
 
 ## 🚀 Quick Start
 
-### Installation
+### Installation (Super Simple!)
 
-**Option 1: Install from Git (Recommended)**
+**One command:**
+
 ```bash
 pip install git+https://github.com/Adriansdls/claude-regulation-scraper.git
 ```
 
-**Option 2: Local Development**
+**Then run:**
+
 ```bash
-git clone <repository-url>
-cd research-graph-explorer
-pip install -e .
+rge chat knowledge_graph.json
 ```
 
-**Option 3: From Wheel**
-```bash
-# Build distribution
-python -m build
-pip install dist/research_graph_explorer-2.0.0-py3-none-any.whl
-```
+**✨ All features work immediately!** (Autocomplete, plots, cost tracking, everything!)
 
-**Quick Test:**
-```bash
-rge --help
-python scripts/verify_install.py
-```
+---
 
-**See [QUICKSTART.md](QUICKSTART.md) for 3-minute test guide!**
-**See [INSTALL.md](INSTALL.md) for detailed installation options.**
+**More options:**
+- 📄 **[SIMPLE_INSTALL.md](SIMPLE_INSTALL.md)** ← Two commands. Done!
+- ⚡ **[QUICKSTART.md](QUICKSTART.md)** ← 3-minute test guide
+- 📚 **[INSTALL.md](INSTALL.md)** ← All installation methods
 
-### Configure API Keys
+### API Keys (Optional for testing)
 
 ```bash
-cp .env.example .env
-# Edit .env with your API keys:
-# - ANTHROPIC_API_KEY (required for agent)
-# - OPENAI_API_KEY (optional)
-# - SEMANTIC_SCHOLAR_API_KEY (optional)
+export ANTHROPIC_API_KEY=your_key_here
 ```
 
 ### Basic Usage
