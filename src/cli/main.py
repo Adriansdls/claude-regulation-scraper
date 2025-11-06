@@ -87,14 +87,106 @@ Ask natural language questions, find gaps, detect echo chambers!
     ))
 
 
+def interactive_session():
+    """Interactive session - stay in RGE environment until exit."""
+    print_welcome_banner()
+    console.print()
+
+    # Check if we have prompt_toolkit for better UX
+    try:
+        from prompt_toolkit import PromptSession
+        from prompt_toolkit.completion import WordCompleter
+
+        commands = ['discover', 'chat', 'extract', 'config', 'help', 'exit', 'quit']
+        completer = WordCompleter(commands, ignore_case=True)
+        session = PromptSession(completer=completer)
+        use_prompt_toolkit = True
+    except ImportError:
+        use_prompt_toolkit = False
+
+    console.print("[dim]Type a command or 'help' for options. 'exit' to quit.[/dim]\n")
+
+    while True:
+        try:
+            # Get user input
+            if use_prompt_toolkit:
+                user_input = session.prompt("rge> ").strip()
+            else:
+                user_input = input("rge> ").strip()
+
+            if not user_input:
+                continue
+
+            # Parse command
+            parts = user_input.split(maxsplit=1)
+            command = parts[0].lower()
+            args = parts[1] if len(parts) > 1 else ""
+
+            # Handle commands
+            if command in ['exit', 'quit', 'q']:
+                console.print("\n[cyan]Thanks for using RGE! Happy researching! 🚀[/cyan]\n")
+                break
+
+            elif command == 'help':
+                console.print("\n[bold cyan]Available Commands:[/bold cyan]")
+                console.print("  [green]discover[/green] <question>  - Discover papers for a research question")
+                console.print("  [green]chat[/green] [graph_path]    - Interactive chat with your research")
+                console.print("  [green]extract[/green] <file>        - Extract knowledge from papers")
+                console.print("  [green]config[/green]               - Check configuration")
+                console.print("  [green]help[/green]                 - Show this help message")
+                console.print("  [green]exit[/green]                 - Exit RGE")
+                console.print()
+
+            elif command == 'discover':
+                if not args:
+                    console.print("[yellow]Usage: discover <research_question>[/yellow]")
+                    console.print("Example: discover \"What are the latest advances in transformers?\"")
+                else:
+                    console.print(f"\n[cyan]Discovering papers for:[/cyan] {args}\n")
+                    console.print("[yellow]This would run the discover command...[/yellow]")
+                    console.print("[dim]Note: Use 'rge discover \"question\"' from shell for full functionality[/dim]\n")
+
+            elif command == 'chat':
+                console.print(f"\n[cyan]Starting chat session...[/cyan]\n")
+                console.print("[yellow]This would launch the chat interface...[/yellow]")
+                console.print("[dim]Note: Use 'rge chat' from shell to enter full chat mode[/dim]\n")
+
+            elif command == 'extract':
+                if not args:
+                    console.print("[yellow]Usage: extract <discovery_file>[/yellow]")
+                    console.print("Example: extract papers.json")
+                else:
+                    console.print(f"\n[cyan]Extracting knowledge from:[/cyan] {args}\n")
+                    console.print("[yellow]This would run the extract command...[/yellow]")
+                    console.print("[dim]Note: Use 'rge extract' from shell for full functionality[/dim]\n")
+
+            elif command == 'config':
+                # Actually run config check
+                console.print()
+                ctx = click.Context(config_check)
+                ctx.invoke(config_check)
+                console.print()
+
+            else:
+                console.print(f"[red]Unknown command:[/red] {command}")
+                console.print("[dim]Type 'help' for available commands[/dim]\n")
+
+        except KeyboardInterrupt:
+            console.print("\n[yellow]Press Ctrl+C again or type 'exit' to quit[/yellow]\n")
+            continue
+
+        except EOFError:
+            console.print("\n[cyan]Goodbye! 🚀[/cyan]\n")
+            break
+
+
 @click.group(invoke_without_command=True)
 @click.pass_context
 def cli(ctx):
     """Research Graph Explorer - AI-powered paper discovery and analysis."""
-    # Show welcome banner if no command given
+    # Enter interactive session if no command given
     if ctx.invoked_subcommand is None:
-        print_welcome_banner()
-        console.print()  # Extra spacing
+        interactive_session()
 
 
 @cli.command()
