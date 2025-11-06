@@ -63,37 +63,57 @@ python -m src.cli.main extract papers.json \
   --ontology config/ontologies/ml_research.yaml \
   --output knowledge_graph.json
 
-# Phase 3: Interactive Chat with your research graph!
+# Phase 3: Interactive Chat with your research graph! ✨
 rge chat knowledge_graph.json
 
-╭─────────────────────────────────────────────────────────╮
-│              🧠 Network Science Research Assistant       │
-│                                                         │
-│  Ask questions in natural language!                     │
-╰─────────────────────────────────────────────────────────╯
+╭─────────────────────────────────────────────────────────────────╮
+│          🧠 Network Science Research Assistant [Enhanced]       │
+│                                                                 │
+│  ✨ New Features: Multi-line • Autocomplete • Plots • Costs   │
+╰─────────────────────────────────────────────────────────────────╯
 
-You: Find gaps in graph neural networks literature
+You: find gap[Tab]
+     → "find gaps in the literature"  [autocomplete!]
+
+You: find gaps in graph neural networks
 
 Agent: I'll analyze the GNN literature for gaps...
-→ Using detect_gaps...
+→ Using detect_gaps... ✓
 
 Found 12 potential gaps:
 
+Gap Importance Distribution
+0.9┤             ●
+0.8┤          ●     ●
+0.7┤       ●           ●
+0.6┤    ●                 ●
+   └──────────────────────────
+      [Terminal plot!]
+
+Top 3 gaps:
 1. ISOLATED IMPORTANT CONCEPT: "Graph pooling methods"
    - PageRank: 0.892 (highly important)
    - Only 2 connections (underexplored)
 
 2. MISSING LINK: "Graph attention" ↔ "Spectral methods"
-   - 87% similarity but no connection in literature
+   - 87% similarity but no connection
 
-[...]
+[Status: Q#2 | $0.12 | 1.2s]  [Real-time cost tracking!]
 
-You: Are there citation rings?
+You: find papers that: \          [Multi-line mode!]
+... - cite both of these concepts
+... - were published after 2020
+... [Ctrl+D]
 
-Agent: Checking for citation rings...
-→ Using find_echo_chambers...
+Agent: Searching for papers matching your criteria...
+→ Using dynamic_graph_query... ✓
 
-Detected 2 potential echo chambers with concerning patterns...
+# NetworkX code with syntax highlighting:
+papers = [p for p in kg.papers
+          if p['year'] > 2020
+          and has_both_concepts(p)]
+
+Found 8 papers! [Shows results...]
 
 # Or use programmatically:
 python
@@ -195,15 +215,75 @@ research-graph-explorer/
 
 ---
 
+## ✨ Enhanced Terminal Experience
+
+The chat interface features a **world-class UX** inspired by Claude Code, GitHub CLI, and modern terminal tools:
+
+### 🎯 Key Features
+
+**1. Multi-line Input**
+- End queries with `\` for multi-line mode
+- Perfect for complex, multi-criteria questions
+- Visual feedback and easy submission (Ctrl+D)
+
+**2. Smart Autocomplete**
+- Press Tab for intelligent suggestions
+- Query templates, commands, graph entities
+- Fuzzy matching and context-aware
+- Discovers ~100+ paper titles, authors, concepts from your graph
+
+**3. Terminal Plots**
+- Beautiful ASCII visualizations right in your terminal
+- Histograms, bar charts, line plots, scatter plots
+- Community sizes, centrality distributions, timelines
+- Powered by `plotext`
+
+**4. Token & Cost Tracking**
+- Real-time usage monitoring
+- Detailed cost breakdown (input/output/cache)
+- Session statistics with plots
+- Budget awareness: always know what you're spending
+
+**5. Syntax Highlighting**
+- Python/NetworkX code beautifully highlighted
+- JSON data formatted
+- Inline code marked
+- Powered by Pygments
+
+**6. Status Bar**
+- Persistent context awareness
+- Shows: graph name, query count, session cost, model
+- Query timing and performance metrics
+
+**7. Commands**
+```bash
+help      # Example queries & templates
+stats     # Graph statistics with plots
+memory    # Saved insights
+usage     # Detailed cost breakdown
+clear     # Reset conversation
+exit      # Exit with session summary
+```
+
+**See `UX_FEATURES_GUIDE.md` for complete documentation!**
+
+---
+
 ## 🛠️ Technology Stack
 
+**Core:**
 - **LLMs**: Anthropic Claude, OpenAI GPT-4
 - **Extraction**: Google LangExtract
 - **Paper APIs**: Semantic Scholar, arXiv, CrossRef, PubMed
-- **Graph**: NetworkX, python-igraph, Neo4j (optional)
+- **Graph**: NetworkX, python-igraph, Leiden/Louvain
 - **PDF**: PyMuPDF, PDFPlumber
 - **Storage**: SQLite/PostgreSQL, Redis
-- **CLI**: Click, Rich
+
+**Terminal UX:**
+- **CLI**: Click, Rich, prompt-toolkit
+- **Plots**: plotext
+- **Highlighting**: Pygments
+- **Tokens**: tiktoken
 
 ---
 
@@ -231,14 +311,23 @@ research-graph-explorer/
 - [x] CLI commands for extraction
 - [x] Gephi export for visualization
 
-### 🚧 Phase 3: Analysis (Next)
-- [ ] Gap detection algorithms
-- [ ] Echo chamber detection
-- [ ] Citation ring finding
-- [ ] Argument weakness analysis
-- [ ] Interdisciplinary bridge detection
-- [ ] Emerging trend identification
-- [ ] Research opportunity finder
+### ✅ Phase 3.1: Graph Algorithms (Complete!)
+- [x] Community detection (Louvain, Leiden, Label Propagation)
+- [x] Centrality metrics (PageRank, Betweenness, Closeness, Degree, Eigenvector)
+- [x] Gap detection algorithms (isolated concepts, missing links, disconnected communities)
+- [x] Echo chamber detection (citation rings, self-referential clusters)
+- [x] Path analysis (shortest paths, knowledge flow)
+- [x] Author network analysis (co-authorship, collaboration patterns)
+- [x] Dynamic code execution (safe NetworkX code sandbox)
+
+### ✅ Phase 3.2: Agentic System (Complete! 🎉)
+- [x] True agentic architecture (autonomous, goal-oriented)
+- [x] 12 specialized tools (graphs + dynamic + memory + visualization)
+- [x] Natural language interface
+- [x] Memory system (persistent insights across sessions)
+- [x] Interactive chat CLI
+- [x] **Enhanced UX** (multi-line, autocomplete, plots, cost tracking)
+- [x] Comprehensive documentation
 
 ---
 
