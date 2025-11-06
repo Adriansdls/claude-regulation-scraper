@@ -54,7 +54,7 @@ class NetworkScienceAgent:
         self,
         knowledge_graph_path: str,
         api_key: Optional[str] = None,
-        model: str = "claude-3-5-sonnet-20241022"
+        model: str = "claude-3-7-sonnet-20250219"  # Updated to working model (Feb 2025)
     ):
         """
         Initialize agent with knowledge graph.

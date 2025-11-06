@@ -18,7 +18,7 @@ class Config(BaseModel):
 
     # LLM Settings
     default_llm: str = "anthropic"  # anthropic or openai
-    anthropic_model: str = "claude-3-5-sonnet-20241022"
+    anthropic_model: str = "claude-3-7-sonnet-20250219"  # Updated to working model (Feb 2025)
     openai_model: str = "gpt-4o"
     max_tokens: int = 4000
     temperature: float = 0.1
