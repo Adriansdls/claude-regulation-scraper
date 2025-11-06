@@ -39,8 +39,10 @@ Research Graph Explorer is an ambitious system that:
 **One command:**
 
 ```bash
-pip install git+https://github.com/Adriansdls/claude-regulation-scraper.git
+pip install "git+https://github.com/Adriansdls/claude-regulation-scraper.git@claude/research-question-app-011CUqbir4zupwJ84dNSwGRo"
 ```
+
+*Note: The `@branch-name` is important to get the Research Graph Explorer!*
 
 **Then run:**
 

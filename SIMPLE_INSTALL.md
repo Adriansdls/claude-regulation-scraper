@@ -7,8 +7,11 @@
 ## Install
 
 ```bash
-pip install git+https://github.com/Adriansdls/claude-regulation-scraper.git
+pip install "git+https://github.com/Adriansdls/claude-regulation-scraper.git@claude/research-question-app-011CUqbir4zupwJ84dNSwGRo"
 ```
+
+**Important:** Include the `@branch-name` to install the Research Graph Explorer!
+(Without it, you'll get the old regulation scraper code)
 
 ## Run
 
